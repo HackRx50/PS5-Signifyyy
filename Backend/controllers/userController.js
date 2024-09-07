@@ -22,6 +22,7 @@ class UserController {
                             tc:tc
                         })
                         await doc.save()
+                        res.status(201).send({"status":"success", "message":"registration success"})
                     } catch (error) {
                         res.send({"status":"failed", "message":"unable to register"})
                     }
