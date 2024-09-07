@@ -1,3 +1,6 @@
+# Ignore .venv inside model directory
 /model/.venv/
-/model/data/datasets/
+
+# Ignore node_modules inside Backend and Frontend directories
 /Backend/node_modules/
+/Frontend/node_modules/
