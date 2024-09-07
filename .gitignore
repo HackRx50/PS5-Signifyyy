@@ -2,6 +2,4 @@
 /model/.venv/
 
 # Ignore node_modules inside Backend and Frontend directories
-/Backend/node_modules/
-/Frontend/Panel/node_modules/
-/Frontend/Panel/node_modules/
+node_modules/
