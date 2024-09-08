@@ -70,4 +70,21 @@ const userLogin = async(req, res) => {
     }
 }
 
-export { userRegistration , userLogin};
+const changeUserPassword = async (req, res) => {
+    const {password, password_conf} = req.body;
+    if(password && password_conf){
+        if(password!==password_conf){
+            res.send({"status": "failed", "message": "password and confirm password deosnt match"})
+        }
+        else{
+            const salt = await bcrypt.genSalt(10);
+            const hashPassword = await bcrypt.hash(password, salt);
+            
+        }
+    }
+    else{
+        res.send({"status": "failed", "message": "All fields required"})
+    }
+}
+
+export { userRegistration , userLogin, changeUserPassword};
