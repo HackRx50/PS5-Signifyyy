@@ -4,7 +4,7 @@ const router = express.Router();
 
 //public routes
 router.post('/register', panelRegistration)
-router.get('/login', panelLogin)
-router.get('/logout', panelLogout)
+router.post('/login', panelLogin)
+router.post('/logout', panelLogout)
 
 export default router

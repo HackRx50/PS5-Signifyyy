@@ -21,7 +21,6 @@ const panelRegistration = async(req, res)=>{
 // Hash Password
         const salt = await bcrypts.genSalt(10);
         const hashedPassword = await bcrypts.hash(password, salt);
-
         const newPanel = new Panel({
             name,
             employeeId,
@@ -55,12 +54,53 @@ const panelRegistration = async(req, res)=>{
 
 // first name last name , employee id ,conff password,  password, office email
 
-const panelLogin = (req, res)=>{
-    res.send("hi i am panel log in ");
+const panelLogin = async (req, res)=>{
+
+    try {
+        
+
+        const {employeeId, password} = req.body;
+
+        const panel = await Panel.findOne({employeeId});
+
+        const isPasswordCorrect = await bcrypts.compare(password, panel?.password||" ");
+
+        if(!panel || !isPasswordCorrect){
+            return res.status(400).json({error: "Invalid user name or Password"});
+        }
+
+        generateTokenAndSetCookie(panel._id, res);
+
+        // res.status(200).json;
+
+        res.status(201).json({
+            _id: panel._id,
+            name: panel.name,
+            employeeId: panel.employeeId,
+            email: panel.email,
+            password: panel.password
+        });
+
+
+        
+    } catch (error) {
+        console.log("Error in Login controller", error);
+        console.log(error);
+        res.status(500).send(error.message);
+    }
 }
 
-const panelLogout = (req, res)=>{
-    res.send("hi i am panel log out ");
+const panelLogout = async(req, res)=>{
+    try {
+        res.cookie("jwt","",{maxAge:0, httpOnly: true });
+        res.cookie();
+        res.status(200).json({error: "Logout Successfully"});
+        
+    } catch (error) {
+        console.log("Error in Login controller", error);
+        console.log(error);
+        res.status(500).send(error.message); 
+    }
 }
 
 export {panelRegistration, panelLogin, panelLogout};
