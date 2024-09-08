@@ -5,6 +5,9 @@ doc = pymupdf.open('datasets/abc.pdf')
 # page = doc.load_page(0)
 # text = page.get_text()
 
+#handling filesystem here
+
+
 for page in doc:
     text = page.get_text()
     print(text)
