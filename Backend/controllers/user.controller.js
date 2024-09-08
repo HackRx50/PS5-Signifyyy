@@ -22,7 +22,12 @@ const userRegistration = async (req, res) => {
                 });
 
                 await newUser.save();
-                return res.status(201).send({ "status": "success", "message": "registration success" });
+                const saved_user = await UserModel.findOne({email:email})
+
+                //Genereate JWT token
+                const token = jwt.sign({usedID:saved_user._id}, process.env.JWT_SECRET_KEY, {expiresIn:'5d'})
+
+                return res.status(201).send({ "status": "success", "message": "registration success", "token":token });
             } else {
                 return res.send({ "status": "failed", "message": "confirmation password doesn't match" });
             }
@@ -43,7 +48,10 @@ const userLogin = async(req, res) => {
             if(user!=null){
                 const isMatch = await bcrypt.compare(password, user.password)
                 if(user.email === email && isMatch){
-                    res.send({"status": "success", "message": "login success"})
+                    //Generate JWT token
+                    const token = jwt.sign({usedID:user._id}, process.env.JWT_SECRET_KEY, {expiresIn:'5d'})
+
+                    res.send({"status": "success", "message": "login success", "token": token})
                 }
                 else{
                     res.send({"status": "failed", "message": "email and password doesn't match"})
