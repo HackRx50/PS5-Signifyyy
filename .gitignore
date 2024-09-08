@@ -1,5 +1,6 @@
 # Ignore .venv inside model directory
 /model/.venv/
-
 # Ignore node_modules inside Backend and Frontend directories
 node_modules/
+
+model/data/training_dataset/
