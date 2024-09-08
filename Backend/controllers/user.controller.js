@@ -78,8 +78,9 @@ const changeUserPassword = async (req, res) => {
         }
         else{
             const salt = await bcrypt.genSalt(10);
-            const hashPassword = await bcrypt.hash(password, salt);
-            
+            const newHashPassword = await bcrypt.hash(password, salt);
+            await UserModel.findByIdAndUpdate(req.user._id, {$set:{password:newHashPassword}})
+            return res.send({ "status": "success", "message": "password changed successfully" });
         }
     }
     else{
