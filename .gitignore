@@ -3,4 +3,6 @@
 # Ignore node_modules inside Backend and Frontend directories
 node_modules/
 
-model/data/training_dataset/
+model/data/dataset/
+model/data/training/
+env/
