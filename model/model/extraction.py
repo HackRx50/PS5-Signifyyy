@@ -62,9 +62,25 @@ def rs_processor(directory_path):
     return json.dumps(all_rs_values, indent=4)
 
 
+def save(output, filename, features, rupees):
+    if not os.path.exists(output):
+        os.makedirs(output)
+
+    file_path = os.path.join(output, filename)
+
+    # Write both JSON outputs to the file
+    with open(file_path, 'a') as file:
+        file.write("Common Words JSON:\n")
+        file.write(features)
+        file.write("\n\n")
+        file.write("Rs Values JSON:\n")
+        file.write(rupees)
+
+
 #Execution Points
 directory_path = 'model/data/training'
-common_words_json = find_common_words(directory_path)
+features = find_common_words(directory_path)
 rs_value = rs_processor(directory_path)
+save('model/data/data', 'model', features, rs_value)
 print(rs_value)
-print(common_words_json)
+print(features)
