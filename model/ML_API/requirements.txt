@@ -1,0 +1,6 @@
+scikit-learn==1.2.0
+# scikit-learn==1.2.1
+fastapi
+numpy==1.23.5
+joblib==1.2.0
+uvicorn

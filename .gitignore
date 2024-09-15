@@ -8,3 +8,7 @@ model/data/training/
 env/
 
 model/training_model/insurance_claims.csv
+
+model/training_model/myenv
+
+model/ML_API/app/myenv
