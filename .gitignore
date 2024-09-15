@@ -1,5 +1,14 @@
 # Ignore .venv inside model directory
 /model/.venv/
-
 # Ignore node_modules inside Backend and Frontend directories
 node_modules/
+
+model/data/dataset/
+model/data/training/
+env/
+
+model/training_model/insurance_claims.csv
+
+model/training_model/myenv
+
+model/ML_API/app/myenv
