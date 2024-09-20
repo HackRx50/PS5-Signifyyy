@@ -27,5 +27,15 @@ var checkUserAuth = async(req, res, next) =>{
     }
 
 }
+const checkAdmin = async(req, res, next) =>{
+    if(req.user && req.user.isAdmin){
+        next()
+    }else{
+        res.status(401).send({"status":"failed", "message": "unautherised admin"})
+    }
+}
+
+
+
 
 export default checkUserAuth
