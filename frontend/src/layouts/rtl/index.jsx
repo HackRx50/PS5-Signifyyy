@@ -6,6 +6,9 @@ import Footer from "components/footer/Footer";
 import routes from "routes.js";
 
 export default function RTL(props) {
+
+  console.log("props", props)
+
   const { ...rest } = props;
   const location = useLocation();
   const [open, setOpen] = React.useState(true);
@@ -46,6 +49,7 @@ export default function RTL(props) {
   };
   const getRoutes = (routes) => {
     return routes.map((prop, key) => {
+      console.log("prop key",prop, key)
       if (prop.layout === "/rtl") {
         return (
           <Route path={`/${prop.path}`} element={prop.component} key={key} />
@@ -56,7 +60,8 @@ export default function RTL(props) {
     });
   };
 
-  document.documentElement.dir = "rtl";
+  // document.documentElement.dir = "ltr";
+  // document.documentElement.dir = "ltr";
   return (
     <div className="flex h-full w-full">
       <Sidebar open={open} onClose={() => setOpen(false)} />
@@ -64,7 +69,7 @@ export default function RTL(props) {
       <div className="h-full w-full bg-lightPrimary dark:!bg-navy-900">
         {/* Main Content */}
         <main
-          className={`mx-[12px] h-full flex-none transition-all md:pe-2 xl:mr-[313px]`}
+          className={`mx-[12px] h-full flex-none transition-all md:pr-2 xl:ml-[313px]`}
         >
           {/* Routes */}
           <div className="h-full">
@@ -78,7 +83,6 @@ export default function RTL(props) {
             <div className="pt-5s mx-auto mb-auto h-full min-h-[84vh] p-2 md:pr-2">
               <Routes>
                 {getRoutes(routes)}
-
                 <Route
                   path="/"
                   element={<Navigate to="/admin/default" replace />}

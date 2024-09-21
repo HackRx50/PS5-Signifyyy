@@ -34,7 +34,7 @@ const Sidebar = ({ open, onClose }) => {
 
       {/* Free Horizon Card */}
       <div className="flex justify-center">
-        <SidebarCard />
+        {/* <SidebarCard /> */}
       </div>
 
       {/* Nav item end */}

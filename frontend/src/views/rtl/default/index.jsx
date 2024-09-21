@@ -22,7 +22,77 @@ const Dashboard = () => {
       {/* Card widget */}
 
       <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
-        <Widget
+      <div>
+        <labe class="mb-2 text-base block">Months as Customer</labe>
+        <input type='number' placeholder='Months as Customer'
+          class="px-4 py-2 text-base rounded-md bg-white border border-gray-400 w-full outline-blue-500" />
+      </div>
+      <div>
+        <labe class="mb-2 text-base block">Age</labe>
+        <input type='number' placeholder='Age'
+          class="px-4 py-2 text-base rounded-md bg-white border border-gray-400 w-full outline-blue-500" />
+      </div>
+      <div>
+        <labe class="mb-2 text-base block">Umbrella Limit</labe>
+        <input type='number' placeholder='Umbrella Limit'
+          class="px-4 py-2 text-base rounded-md bg-white border border-gray-400 w-full outline-blue-500" />
+      </div>
+      <div>
+        <labe class="mb-2 text-base block">Capital Loss</labe>
+        <input type='number' placeholder='Capital Loss'
+          class="px-4 py-2 text-base rounded-md bg-white border border-gray-400 w-full outline-blue-500" />
+      </div>
+      <div>
+        <labe class="mb-2 text-base block">Capital Gains</labe>
+        <input type='number' placeholder='Capital Gains'
+          class="px-4 py-2 text-base rounded-md bg-white border border-gray-400 w-full outline-blue-500" />
+      </div>
+      <div>
+        <labe class="mb-2 text-base block">Policy Deductable</labe>
+        <input type='number' placeholder='Policy Deductable'
+          class="px-4 py-2 text-base rounded-md bg-white border border-gray-400 w-full outline-blue-500" />
+      </div>
+      <div>
+        <labe class="mb-2 text-base block">Policy Annual Premium</labe>
+        <input type='number' placeholder='Policy Annual Premium'
+          class="px-4 py-2 text-base rounded-md bg-white border border-gray-400 w-full outline-blue-500" />
+      </div>
+      <div>
+        <labe class="mb-2 text-base block">Incident Hour of The Day</labe>
+        <input type='number' placeholder='Incident Hour of The Day'
+          class="px-4 py-2 text-base rounded-md bg-white border border-gray-400 w-full outline-blue-500" />
+      </div>
+      <div>
+        <labe class="mb-2 text-base block">Number of Vehicles Involved</labe>
+        <input type='number' placeholder='Eg: 4'
+          class="px-4 py-2 text-base rounded-md bg-white border border-gray-400 w-full outline-blue-500" />
+      </div>
+      <div>
+        <labe class="mb-2 text-base block">Body Injuries</labe>
+        <input type='number' placeholder='Eg: 2'
+          class="px-4 py-2 text-base rounded-md bg-white border border-gray-400 w-full outline-blue-500" />
+      </div>
+      <div>
+        <labe class="mb-2 text-base block">Witnesses</labe>
+        <input type='number' placeholder='Eg: 2'
+          class="px-4 py-2 text-base rounded-md bg-white border border-gray-400 w-full outline-blue-500" />
+      </div>
+      <div>
+        <labe class="mb-2 text-base block">Injury Claim</labe>
+        <input type='number' placeholder='Eg: 65100rs'
+          class="px-4 py-2 text-base rounded-md bg-white border border-gray-400 w-full outline-blue-500" />
+      </div>
+      <div>
+        <labe class="mb-2 text-base block">Property Claim</labe>
+        <input type='number' placeholder='Eg: 130200rs'
+          class="px-4 py-2 text-base rounded-md bg-white border border-gray-400 w-full outline-blue-500" />
+      </div>
+      <div>
+        <labe class="mb-2 text-base block">Vehicle Claim</labe>
+        <input type='number' placeholder='Eg: 520800rs'
+          class="px-4 py-2 text-base rounded-md bg-white border border-gray-400 w-full outline-blue-500" />
+      </div>
+        {/* <Widget
           icon={<MdBarChart className="h-7 w-7" />}
           title={"Earnings"}
           subtitle={"$340.5"}
@@ -51,49 +121,49 @@ const Dashboard = () => {
           icon={<IoMdHome className="h-6 w-6" />}
           title={"Total Projects"}
           subtitle={"$2433"}
-        />
+        /> */}
       </div>
 
       {/* Charts */}
 
-      <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+      {/* <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
         <TotalSpent />
         <WeeklyRevenue />
-      </div>
+      </div> */}
 
       {/* Tables & Charts */}
 
       <div className="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-2">
         {/* Check Table */}
-        <div>
+        {/* <div>
           <CheckTable
             columnsData={columnsDataCheck}
             tableData={tableDataCheck}
           />
-        </div>
+        </div> */}
 
         {/* Traffic chart & Pie Chart */}
 
-        <div className="grid grid-cols-1 gap-5 rounded-[20px] md:grid-cols-2">
+        {/* <div className="grid grid-cols-1 gap-5 rounded-[20px] md:grid-cols-2">
           <DailyTraffic />
           <PieChartCard />
-        </div>
+        </div> */}
 
         {/* Complex Table , Task & Calendar */}
 
-        <ComplexTable
+        {/* <ComplexTable
           columnsData={columnsDataComplex}
           tableData={tableDataComplex}
-        />
+        /> */}
 
         {/* Task chart & Calendar */}
-
+{/* 
         <div className="grid grid-cols-1 gap-5 rounded-[20px] md:grid-cols-2">
           <TaskCard />
           <div className="grid grid-cols-1 rounded-[20px]">
             <MiniCalendar />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
