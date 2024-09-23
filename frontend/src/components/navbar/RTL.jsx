@@ -60,7 +60,7 @@ const Navbar = (props) => {
         </div>
         <span
           className="flex cursor-pointer text-xl text-gray-600 dark:text-white xl:hidden"
-          onClick={onOpenSidenav}
+          // onClick={onOpenSidenav}
         >
           <FiAlignJustify className="h-5 w-5" />
         </span>
@@ -89,10 +89,10 @@ const Navbar = (props) => {
                 </div>
                 <div className="flex h-full w-full flex-col justify-center rounded-lg px-1 text-sm ms-2">
                   <p className="mb-1 text-base font-bold text-gray-900 text-start dark:text-white">
-                    New Update: Horizon UI Dashboard PRO
+                    {/* New Update: Horizon UI Dashboard PRO */}
                   </p>
                   <p className="font-base text-xs text-gray-900 text-start dark:text-white">
-                    A new update for your downloaded item is available!
+                    {/* A new update for your downloaded item is available! */}
                   </p>
                 </div>
               </button>
@@ -103,10 +103,10 @@ const Navbar = (props) => {
                 </div>
                 <div className="flex h-full w-full flex-col justify-center rounded-lg px-1 text-sm ms-2">
                   <p className="mb-1 text-base font-bold text-gray-900 text-start dark:text-white">
-                    New Update: Horizon UI Dashboard PRO
+                    {/* New Update: Horizon UI Dashboard PRO */}
                   </p>
                   <p className="font-base text-xs text-gray-900 text-start dark:text-white">
-                    A new update for your downloaded item is available!
+                    {/* A new update for your downloaded item is available! */}
                   </p>
                 </div>
               </button>
@@ -123,7 +123,7 @@ const Navbar = (props) => {
           }
           children={
             <div className="flex w-[350px] flex-col gap-2 rounded-[20px] bg-white p-4 shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none">
-              <div
+              {/* <div
                 style={{
                   backgroundImage: `url(${navbarimage})`,
                   backgroundRepeat: "no-repeat",
@@ -151,7 +151,7 @@ const Navbar = (props) => {
                 className="hover:bg-black px-full linear flex cursor-pointer items-center justify-center rounded-xl py-[11px] font-bold text-navy-700 transition duration-200 hover:text-navy-700 dark:text-white dark:hover:text-white"
               >
                 Try Horizon Free
-              </a>
+              </a> */}
             </div>
           }
           classNames={"py-2 top-6 left-0 -start-[250px] md:-start-[330px] w-max"}
@@ -178,10 +178,10 @@ const Navbar = (props) => {
         {/* Profile & Dropdown */}
         <Dropdown
           button={
-            <img
-              className="h-10 w-10 rounded-full"
-              src={avatar}
-              alt="Elon Musk"
+            <div
+              className="h-10 w-10 rounded-full border-2"
+              // src={avatar}
+              // alt="Elon Musk"
             />
           }
           children={
@@ -217,8 +217,7 @@ const Navbar = (props) => {
               </div>
             </div>
           }
-          classNames={"py-2 top-8 left-0 -start-[180px] w-max"}
-          animation="origin-[75%_0%] md:origin-top-end transition-all duration-300 ease-in-out"
+          classNames={"py-2 top-8 -left-[180px] w-max"}
         />
       </div>
     </nav>

@@ -66,7 +66,7 @@ const routes = [
     component: <SigningIn />,
   },
   {
-    name: "RTL Admin",
+    name: "User",
     layout: "/rtl",
     path: "rtl",
     icon: <MdHome className="h-6 w-6" />,

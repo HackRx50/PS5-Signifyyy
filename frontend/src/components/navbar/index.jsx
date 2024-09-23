@@ -123,7 +123,7 @@ const Navbar = (props) => {
           }
           children={
             <div className="flex w-[350px] flex-col gap-2 rounded-[20px] bg-white p-4 shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none">
-              <div
+              {/* <div
                 style={{
                   backgroundImage: `url(${navbarimage})`,
                   backgroundRepeat: "no-repeat",
@@ -151,7 +151,7 @@ const Navbar = (props) => {
                 className="hover:bg-black px-full linear flex cursor-pointer items-center justify-center rounded-xl py-[11px] font-bold text-navy-700 transition duration-200 hover:text-navy-700 dark:text-white dark:hover:text-white"
               >
                 Try Horizon Free
-              </a>
+              </a> */}
             </div>
           }
           classNames={"py-2 top-6 -left-[250px] md:-left-[330px] w-max"}
@@ -178,10 +178,10 @@ const Navbar = (props) => {
         {/* Profile & Dropdown */}
         <Dropdown
           button={
-            <img
-              className="h-10 w-10 rounded-full"
-              src={avatar}
-              alt="Elon Musk"
+            <div
+              className="h-10 w-10 rounded-full border-2 "
+              // src={avatar}
+              // alt="Elon Musk"
             />
           }
           children={
