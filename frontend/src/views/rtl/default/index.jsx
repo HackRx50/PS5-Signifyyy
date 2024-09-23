@@ -16,12 +16,22 @@ import DailyTraffic from "views/rtl/default/components/DailyTraffic";
 import TaskCard from "views/rtl/default/components/TaskCard";
 import tableDataCheck from "./variables/tableDataCheck.json";
 import tableDataComplex from "./variables/tableDataComplex.json";
+import { BsArrowBarUp } from "react-icons/bs";
 import axios from "axios";
 
 const Dashboard = () => {
-
   let ans = [];
-  let temp1=[], temp2=[], temp3=[], temp4=[], temp5=[], temp6=[], temp7=[], temp8=[], temp9=[], temp10=[], temp11=[];
+  let temp1 = [],
+    temp2 = [],
+    temp3 = [],
+    temp4 = [],
+    temp5 = [],
+    temp6 = [],
+    temp7 = [],
+    temp8 = [],
+    temp9 = [],
+    temp10 = [],
+    temp11 = [];
 
   // Policy CSL
   const Polcsl = ["250/500", "500/1000", "100/300"];
@@ -74,9 +84,7 @@ const Dashboard = () => {
     setedu(event.target.value);
   };
   const oneHotEdu = (selected) => {
-    temp3 = categoriesOne.map((category) =>
-      category === selected ? 1 : 0
-    );
+    temp3 = categoriesOne.map((category) => (category === selected ? 1 : 0));
     // console.log(typeof temp, temp);
     return temp3;
   };
@@ -264,50 +272,60 @@ const Dashboard = () => {
 
   const Submitfn = () => {
     ans = [
-        Months,
-        PolDed,
-        Umbli,
-        Capga,
-        Caplo,
-        Inhr,
-        Nvin,
-        BodIn,
-        Wit,
-        Inj,
-        ProC,
-        VehC
+      Months,
+      PolDed,
+      Umbli,
+      Capga,
+      Caplo,
+      Inhr,
+      Nvin,
+      BodIn,
+      Wit,
+      Inj,
+      ProC,
+      VehC,
     ];
 
-    let result = ans.concat(temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8, temp9, temp10, temp11);
+    let result = ans.concat(
+      temp1,
+      temp2,
+      temp3,
+      temp4,
+      temp5,
+      temp6,
+      temp7,
+      temp8,
+      temp9,
+      temp10,
+      temp11
+    );
 
-         // {"features": [190, 2000, 0, 36900, -53700, 10, 1, 2, 1, 630, 630, 5040, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1]}
+    // {"features": [190, 2000, 0, 36900, -53700, 10, 1, 2, 1, 630, 630, 5040, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1]}
 
     console.log("here array is", result);
 
     try {
-
-      if(result.length !== 53){
+      if (result.length !== 53) {
         throw new Error("Please Fill all the sections");
       }
 
-      axios.post('http://127.0.0.1:8000/predict', 
-        {"features": result }
-      ).then((res)=>{
-        console.log(res.data);
-        if(res.data.predicted_class ==='N')
-        setPred("Seems Not a Fraud");
-        else{
-          setPred("High chances of Fraud");
-        }
-      }).catch((err)=>{
-        console.log(err);
-      })
-      
+      axios
+        .post("http://127.0.0.1:8000/predict", { features: result })
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.predicted_class === "N") setPred("Seems Not a Fraud");
+          else {
+            setPred("High chances of Fraud");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     } catch (error) {
       console.log(error.message);
       setPred(error.message);
     }
-};
+  };
 
   return (
     <div>
@@ -339,7 +357,7 @@ const Dashboard = () => {
             type="number"
             placeholder="Umbrella Limit"
             class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
-                        value={Umbli}
+            value={Umbli}
             onChange={(e) => setUmbli(e.target.value)}
           />
         </div>
@@ -349,7 +367,7 @@ const Dashboard = () => {
             type="number"
             placeholder="Capital Gains"
             class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
-                        value={Capga}
+            value={Capga}
             onChange={(e) => setCapga(e.target.value)}
           />
         </div>
@@ -360,7 +378,7 @@ const Dashboard = () => {
             type="number"
             placeholder="Capital Loss"
             class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
-                        value={Caplo}
+            value={Caplo}
             onChange={(e) => setCaplo(e.target.value)}
           />
         </div>
@@ -370,7 +388,7 @@ const Dashboard = () => {
             type="number"
             placeholder="Incident Hour of The Day"
             class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
-                        value={Inhr}
+            value={Inhr}
             onChange={(e) => setInhr(e.target.value)}
           />
         </div>
@@ -380,7 +398,7 @@ const Dashboard = () => {
             type="number"
             placeholder="Eg: 4"
             class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
-                        value={Nvin}
+            value={Nvin}
             onChange={(e) => setNvin(e.target.value)}
           />
         </div>
@@ -390,7 +408,7 @@ const Dashboard = () => {
             type="number"
             placeholder="Eg: 2"
             class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
-                        value={BodIn}
+            value={BodIn}
             onChange={(e) => setBodIn(e.target.value)}
           />
         </div>
@@ -400,7 +418,7 @@ const Dashboard = () => {
             type="number"
             placeholder="Eg: 2"
             class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
-                        value={Wit}
+            value={Wit}
             onChange={(e) => setWit(e.target.value)}
           />
         </div>
@@ -410,7 +428,7 @@ const Dashboard = () => {
             type="number"
             placeholder="Eg: 65100rs"
             class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
-                        value={Inj}
+            value={Inj}
             onChange={(e) => setInj(e.target.value)}
           />
         </div>
@@ -420,7 +438,7 @@ const Dashboard = () => {
             type="number"
             placeholder="Eg: 130200rs"
             class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
-                        value={ProC}
+            value={ProC}
             onChange={(e) => setProC(e.target.value)}
           />
         </div>
@@ -430,7 +448,7 @@ const Dashboard = () => {
             type="number"
             placeholder="Eg: 520800rs"
             class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
-                        value={VehC}
+            value={VehC}
             onChange={(e) => setVehC(e.target.value)}
           />
         </div>
@@ -798,22 +816,47 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="mt-10 flex justify-center" >
-        {pred}
-      </div>
+      <div className="mt-10 flex justify-center">{pred}</div>
 
-      <div className="mt-10 flex justify-center">
+      <div className="mt-10 flex justify-around ">
         <button
           type="button"
-          class="px-5 py-2.5 rounded-lg text-white text-sm tracking-wider font-medium border border-current outline-none bg-blue-700 hover:bg-blue-800 active:bg-blue-700"
+          class="border-current rounded-lg border bg-blue-700 px-5 py-2.5 text-sm font-medium tracking-wider text-white outline-none hover:bg-blue-800 active:bg-blue-700"
           onClick={Submitfn}
         >
           Submit
         </button>
+
+        <button
+          className="flex items-center"
+          onClick={() => document.getElementById("fileInput").click()}
+        >
+          <div className="border-current rounded-lg border bg-blue-700 px-5 py-2.5 text-sm font-medium tracking-wider text-white outline-none hover:bg-blue-800 active:bg-blue-700">
+            <BsArrowBarUp style={{ height: "30px", width: "30px" }} />
+          </div>
+          <div className="ml-2 flex h-full w-full flex-col justify-center rounded-lg px-1 text-sm">
+            <p className="mb-1 text-left text-base font-bold text-gray-900 dark:text-white">
+              Upload The Document
+            </p>
+          </div>
+          <input
+            id="fileInput"
+            type="file"
+            accept=".pdf"
+            style={{ display: "none" }}
+            onChange={(e) => {
+              const file = e.target.files[0];
+              if (file) {
+
+                
+                console.log(file.name); // Do something with the file
+              }
+            }}
+          />
+        </button>
+
       </div>
-
     </div>
-
   );
 };
 
