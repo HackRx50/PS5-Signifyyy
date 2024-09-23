@@ -1,10 +1,19 @@
 from fastapi import FastAPI
 import joblib
 import numpy as np
+from fastapi.middleware.cors import CORSMiddleware
 
 model = joblib.load('model.joblib')
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allow all HTTP methods
+    allow_headers=["*"],  # Allow all headers
+)
 
 class_names = np.array(['Fraud', 'Legit'])
 

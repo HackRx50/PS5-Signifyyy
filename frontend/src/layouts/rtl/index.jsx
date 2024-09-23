@@ -90,7 +90,7 @@ export default function RTL(props) {
               </Routes>
             </div>
             <div className="p-3">
-              <Footer />
+              {/* <Footer /> */}
             </div>
           </div>
         </main>

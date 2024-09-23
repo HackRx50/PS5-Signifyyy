@@ -18,6 +18,7 @@ import {
   MdBarChart,
   MdPerson,
   MdLock,
+  MdAccessAlarms
 } from "react-icons/md";
 
 const routes = [
@@ -32,7 +33,7 @@ const routes = [
     name: "Alarm",
     layout: "/admin",
     path: "nft-marketplace",
-    icon: <MdOutlineShoppingCart className="h-6 w-6" />,
+    icon: <MdAccessAlarms className="h-6 w-6" />,
     component: <NFTMarketplace />,
     secondary: true,
   },
