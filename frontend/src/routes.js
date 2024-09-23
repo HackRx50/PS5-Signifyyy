@@ -9,6 +9,7 @@ import RTLDefault from "views/rtl/default";
 
 // Auth Imports
 import SignIn from "views/auth/SignIn";
+import SigningIn from "views/auth/SigningIn"
 
 // Icon Imports
 import {
@@ -55,6 +56,13 @@ const routes = [
     path: "sign-in",
     icon: <MdLock className="h-6 w-6" />,
     component: <SignIn />,
+  },
+  {
+    name: "Signing In",
+    layout: "/auth",
+    path: "SigningIn",
+    icon: <MdLock className="h-6 w-6" />,
+    component: <SigningIn />,
   },
   {
     name: "RTL Admin",
