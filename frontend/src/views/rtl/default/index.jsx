@@ -16,6 +16,7 @@ import DailyTraffic from "views/rtl/default/components/DailyTraffic";
 import TaskCard from "views/rtl/default/components/TaskCard";
 import tableDataCheck from "./variables/tableDataCheck.json";
 import tableDataComplex from "./variables/tableDataComplex.json";
+import axios from "axios";
 
 const Dashboard = () => {
 
@@ -258,9 +259,8 @@ const Dashboard = () => {
   const [ProC, setProC] = useState(0);
   const [VehC, setVehC] = useState(0);
 
-  console.log("Months", Months);
-
-
+  // console.log("Months", Months);
+  const [pred, setPred] = useState("hi");
 
   const Submitfn = () => {
     ans = [
@@ -278,9 +278,35 @@ const Dashboard = () => {
         VehC
     ];
 
-    let res = ans.concat(temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8, temp9, temp10, temp11);
+    let result = ans.concat(temp1, temp2, temp3, temp4, temp5, temp6, temp7, temp8, temp9, temp10, temp11);
 
-    console.log(res);
+         // {"features": [190, 2000, 0, 36900, -53700, 10, 1, 2, 1, 630, 630, 5040, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1]}
+
+    console.log("here array is", result);
+
+    try {
+
+      if(result.length !== 53){
+        throw new Error("Please Fill all the sections");
+      }
+
+      axios.post('http://127.0.0.1:8000/predict', 
+        {"features": result }
+      ).then((res)=>{
+        console.log(res.data);
+        if(res.data.predicted_class ==='N')
+        setPred("Seems Not a Fraud");
+        else{
+          setPred("High chances of Fraud");
+        }
+      }).catch((err)=>{
+        console.log(err);
+      })
+      
+    } catch (error) {
+      console.log(error.message);
+      setPred(error.message);
+    }
 };
 
   return (
@@ -770,6 +796,10 @@ const Dashboard = () => {
             </div>
           )}
         </div>
+      </div>
+
+      <div className="mt-10 flex justify-center" >
+        {pred}
       </div>
 
       <div className="mt-10 flex justify-center">

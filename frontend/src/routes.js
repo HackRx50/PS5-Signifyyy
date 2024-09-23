@@ -29,7 +29,7 @@ const routes = [
     component: <MainDashboard />,
   },
   {
-    name: "NFT Marketplace",
+    name: "Alarm",
     layout: "/admin",
     path: "nft-marketplace",
     icon: <MdOutlineShoppingCart className="h-6 w-6" />,
@@ -58,7 +58,7 @@ const routes = [
     component: <SignIn />,
   },
   {
-    name: "Signing In",
+    name: "Sign Up",
     layout: "/auth",
     path: "SigningIn",
     icon: <MdLock className="h-6 w-6" />,
