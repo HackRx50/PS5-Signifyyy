@@ -9,6 +9,7 @@ const upload = multer({ storage: storage });
 const uploadDocument = upload.single("document");
 
 const userRegistration = async (req, res) => {
+  //sign up
   const { name, email, password, password_conf, tc } = req.body;
   try {
     const user = await UserModel.findOne({ email: email });
@@ -60,6 +61,7 @@ const userRegistration = async (req, res) => {
 };
 
 const userLogin = async (req, res) => {
+  //login
   try {
     const { email, password } = req.body;
     if (email && password) {
