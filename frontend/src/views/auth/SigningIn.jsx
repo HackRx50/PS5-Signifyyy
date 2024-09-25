@@ -37,10 +37,6 @@ export default function SigningIn() {
     }
   };
 
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
-
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
@@ -72,7 +68,9 @@ export default function SigningIn() {
             id="name"
             type="text"
             value={name}
-            onChange={handleNameChange}
+            onChange={(e) => {
+                setName(e.target.value);
+              }}
             
           />
 
