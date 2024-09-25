@@ -23,7 +23,7 @@ export default function SignIn() {
       if (response.data.status === "success") {
         alert("Login successful");
         localStorage.setItem("token", response.data.token);
-        navigate("/dashboard"); 
+        navigate("/admin"); 
       } else {
         alert(response.data.message);
       }
@@ -52,7 +52,9 @@ export default function SignIn() {
             id="email"
             type="text"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
           />
 
           <InputField
@@ -63,7 +65,9 @@ export default function SignIn() {
             id="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
           />
 
           <div className="mb-4 flex items-center justify-between px-2">

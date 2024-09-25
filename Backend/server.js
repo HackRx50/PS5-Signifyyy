@@ -26,5 +26,5 @@ app.use("/api/user", userRoutes);
 app.use("/api/panel", panelRoutes);
 
 app.listen(5000, ()=>{
-    console.log(`server linstening at http://localhost:5000`)
+    console.log(`server linstening at http://localhost:${port}`)
 })
