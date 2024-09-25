@@ -8,11 +8,11 @@ const userSchema = new mongoose.Schema({
     tc:{type:Boolean, required:true},
     filename: {
         type: String,
-        required: true,
+        default: ""
     },
     documentData: {
         type: Buffer,
-        required: true,
+        default: null
     },
 })
 
