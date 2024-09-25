@@ -17,23 +17,40 @@ export default function SigningIn() {
 
     try {
       const response = await axios.post('http://localhost:5000/api/user/register', {
-        name,
-        email,
-        password,
+        name : name,
+        email : email,
+        password : password,
         password_conf: passwordConf,
         tc: terms,
       });
-
+      console.log("Checking: ",name, email, password, passwordConf, terms);
       if (response.data.status === "success") {
         alert("Registration successful");
         navigate("/auth/sign-in");
       } else {
+        console.log(response.data)
         alert(response.data.message);
       }
     } catch (error) {
       console.error("Error during registration", error);
       alert("Failed to register");
     }
+  };
+
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
+  const handlePassChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleConfPassChange = (e) => {
+    setPasswordConf(e.target.value);
   };
 
   return (
@@ -55,7 +72,8 @@ export default function SigningIn() {
             id="name"
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={handleNameChange}
+            
           />
 
           <InputField
@@ -66,7 +84,7 @@ export default function SigningIn() {
             id="email"
             type="text"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
           />
 
           <InputField
@@ -77,7 +95,7 @@ export default function SigningIn() {
             id="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePassChange}
           />
 
           <InputField
@@ -88,7 +106,7 @@ export default function SigningIn() {
             id="confirm-password"
             type="password"
             value={passwordConf}
-            onChange={(e) => setPasswordConf(e.target.value)}
+            onChange={handleConfPassChange}
           />
 
           <div className="mb-4 flex items-center px-2">
