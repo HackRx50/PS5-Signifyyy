@@ -1,71 +1,118 @@
+import os
 import pdfplumber
 import re
 import pandas as pd
 
-with pdfplumber.open('document.pdf') as pdf:
-    pages = pdf.pages
-    text = ""
-    for page in pages:
-        text += page.extract_text()
+def extract_pdf_data(pdf_path):
+    # Open the PDF and extract text
+    with pdfplumber.open(pdf_path) as pdf:
+        text = ""
+        for page in pdf.pages:
+            text += page.extract_text()
 
-#Extracting CNR No., MACP No., various useful dates, duration, accident information etc.
-cnr_no = re.search(r'CNR No\.\s*(\S+)', text)
-cnr_no = cnr_no.group(1) if cnr_no else None
-macp_no = re.search(r'M\.A\.C\.P\. No\.\s*(\d+/\d+)', text)
-macp_no = macp_no.group(1) if macp_no else None
-received_on = re.search(r'RECEIVED ON\s*:\s*(\d{2}\.\d{2}\.\d{4})', text)
-received_on = received_on.group(1) if received_on else None
-registered_on = re.search(r'REGISTERED ON\s*:\s*(\d{2}\.\d{2}\.\d{4})', text)
-registered_on = registered_on.group(1) if registered_on else None
-decided_on = re.search(r'DECIDED ON\s*:\s*(\d{2}\.\d{2}\.\d{4})', text)
-decided_on = decided_on.group(1) if decided_on else None
-duration = re.search(r'DURATION\s*:\s*([\dYrs\.Ms\.\dDs]+)', text)
-duration = duration.group(1) if duration else None
-court_info = re.search(r'BEFORE THE MEMBER, (.+)', text)
-court_info = court_info.group(1).strip() if court_info else None
-accident_date = re.search(r'accident took place on (\d{2}\.\d{2}\.\d{4})', text)
-accident_date = accident_date.group(1) if accident_date else None
-claim_amount = re.search(r'Claim of Rs\.\s*([\d,]+)', text)
-claim_amount = claim_amount.group(1) if claim_amount else None
-applicant_name = re.search(r'Applicant\s*:\s*(Mr\.\s*\w+\s*\w+\s*\w+)', text)
-applicant_name = applicant_name.group(1) if applicant_name else None
-applicant_age_address = re.search(r'Age\s*:\s*(\d+)\s*years,\s*Occ\s*:\s*(.+)', text)
-applicant_age = applicant_age_address.group(1) if applicant_age_address else None
-applicant_address = applicant_age_address.group(2).split("R/at")[1].strip() if applicant_age_address else None
-opponent_1 = re.search(r'1\s*-\s*(Mr\.\s*\w+\s*\w+\s*\w+)', text)
-opponent_1 = opponent_1.group(1) if opponent_1 else None
-opponent_2 = re.search(r'2\s*-\s*(M/\s*\S+)', text)
-opponent_2 = opponent_2.group(1) if opponent_2 else None
-police_case = re.search(r'Crime No\.\s*(\d+/\d{4})', text)
-police_case = police_case.group(1) if police_case else None
-vehicle_no = re.search(r'bearing No\.\s*(\S+)', text)
-vehicle_no = vehicle_no.group(1) if vehicle_no else None
-compensation_awarded = re.search(r'compensation of\s*Rs\.\s*([\d,]+)', text)
-compensation_awarded = compensation_awarded.group(1) if compensation_awarded else None
-interest_rate = re.search(r'rate of interest\s*at\s*(\d+%)', text)
-interest_rate = interest_rate.group(1) if interest_rate else None
-hospitals = re.findall(r'(Vighnaharta|Sainath|Sahyadri) Hospital', text)
-hospitals = ', '.join(set(hospitals)) if hospitals else None
-court_fees = re.search(r'Applicant is directed to pay\s*(\S+) court fees', text)
-court_fees = court_fees.group(1) if court_fees else None
+    cnr_no = re.search(r'CNR No\.\s*(\S+)', text)
+    cnr_no = cnr_no.group(1) if cnr_no else 'NA'
 
-# now storing those parameters into an object
-data = {
-    "Parameter": ["CNR No.", "M.A.C.P. No.", "Received On", "Registered On", "Decided On", "Duration", "Court Info",
-                  "Accident Date", "Claim Amount", "Applicant Name", "Applicant Age", "Applicant Address",
-                  "Opponent 1", "Opponent 2", "Police Case No.", "Vehicle No.", "Compensation Awarded",
-                  "Interest Rate", "Hospital Names", "Court Fees"],
-    "Details": [cnr_no, macp_no, received_on, registered_on, decided_on, duration, court_info, accident_date,
-                claim_amount, applicant_name, applicant_age, applicant_address, opponent_1, opponent_2, police_case,
-                vehicle_no, compensation_awarded, interest_rate, hospitals, court_fees]
-}
+    macp_no = re.search(r'M\.A\.C\.P\. No\.\s*(\d+/\d+)', text)
+    macp_no = macp_no.group(1) if macp_no else 'NA'
 
-# to dataframe
-df = pd.DataFrame(data)
+    received_on = re.search(r'RECEIVED ON\s*:\s*(\d{2}\.\d{2}\.\d{4})', text)
+    received_on = received_on.group(1) if received_on else 'NA'
 
-# to csv or xlsx
-df.to_csv("extracted_data.csv", index=False)
-df.to_excel("extracted_data.xlsx", index=False)
+    registered_on = re.search(r'REGISTERED ON\s*:\s*(\d{2}\.\d{2}\.\d{4})', text)
+    registered_on = registered_on.group(1) if registered_on else 'NA'
 
-# Display the dataframe (optional)
-print(df)
+    decided_on = re.search(r'DECIDED ON\s*:\s*(\d{2}\.\d{2}\.\d{4})', text)
+    decided_on = decided_on.group(1) if decided_on else 'NA'
+
+    duration = re.search(r'DURATION\s*:\s*([\dYrs\.Ms\.\dDs]+)', text)
+    duration = duration.group(1) if duration else 'NA'
+
+    court_info = re.search(r'BEFORE THE MEMBER, (.+)', text)
+    court_info = court_info.group(1).strip() if court_info else 'NA'
+
+    accident_date = re.search(r'accident took place on (\d{2}\.\d{2}\.\d{4})', text)
+    accident_date = accident_date.group(1) if accident_date else 'NA'
+
+    claim_amount = re.search(r'Claim of Rs\.\s*([\d,]+)', text)
+    claim_amount = claim_amount.group(1) if claim_amount else 'NA'
+
+    applicant_name = re.search(r'Applicant\s*:\s*(Mr\.\s*\w+\s*\w+\s*\w+)', text)
+    applicant_name = applicant_name.group(1) if applicant_name else 'NA'
+
+    applicant_age_address = re.search(r'Age\s*:\s*(\d+)\s*years,\s*Occ\s*:\s*(.+)', text)
+    applicant_age = applicant_age_address.group(1) if applicant_age_address else 'NA'
+    applicant_address = applicant_age_address.group(2).split("R/at")[1].strip() if applicant_age_address else 'NA'
+
+    opponent_1 = re.search(r'1\s*-\s*(Mr\.\s*\w+\s*\w+\s*\w+)', text)
+    opponent_1 = opponent_1.group(1) if opponent_1 else 'NA'
+
+    opponent_2 = re.search(r'2\s*-\s*(M/\s*\S+)', text)
+    opponent_2 = opponent_2.group(1) if opponent_2 else 'NA'
+
+    police_case = re.search(r'Crime No\.\s*(\d+/\d{4})', text)
+    police_case = police_case.group(1) if police_case else 'NA'
+
+    vehicle_no = re.search(r'bearing No\.\s*(\S+)', text)
+    vehicle_no = vehicle_no.group(1) if vehicle_no else 'NA'
+
+    compensation_awarded = re.search(r'compensation of\s*Rs\.\s*([\d,]+)', text)
+    compensation_awarded = compensation_awarded.group(1) if compensation_awarded else 'NA'
+
+    interest_rate = re.search(r'rate of interest\s*at\s*(\d+%)', text)
+    interest_rate = interest_rate.group(1) if interest_rate else 'NA'
+
+    hospitals = re.findall(r'(Vighnaharta|Sainath|Sahyadri) Hospital', text)
+    hospitals = ', '.join(set(hospitals)) if hospitals else 'NA'
+
+    court_fees = re.search(r'Applicant is directed to pay\s*(\S+) court fees', text)
+    court_fees = court_fees.group(1) if court_fees else 'NA'
+
+    # Store extracted data in a dictionary
+    data = {
+        "CNR No.": cnr_no,
+        "M.A.C.P. No.": macp_no,
+        "Received On": received_on,
+        "Registered On": registered_on,
+        "Decided On": decided_on,
+        "Duration": duration,
+        "Court Info": court_info,
+        "Accident Date": accident_date,
+        "Claim Amount": claim_amount,
+        "Applicant Name": applicant_name,
+        "Applicant Age": applicant_age,
+        "Applicant Address": applicant_address,
+        "Opponent 1": opponent_1,
+        "Opponent 2": opponent_2,
+        "Police Case No.": police_case,
+        "Vehicle No.": vehicle_no,
+        "Compensation Awarded": compensation_awarded,
+        "Interest Rate": interest_rate,
+        "Hospital Names": hospitals,
+        "Court Fees": court_fees
+    }
+
+    return data
+
+def process_pdfs(directory, output_file):
+    all_data = pd.DataFrame()
+
+    for filename in os.listdir(directory):
+        if filename.endswith(".pdf"):
+            file_path = os.path.join(directory, filename)
+            print(f"Processing {file_path}...")
+            pdf_data = extract_pdf_data(file_path)
+            df = pd.DataFrame([pdf_data])            
+            all_data = pd.concat([all_data, df], ignore_index=True)
+
+    # Save the result as CSV or Excel
+    all_data.to_csv(f"{output_file}.csv", index=False)
+    all_data.to_excel(f"{output_file}.xlsx", index=False)
+
+    print(f"All PDFs processed and data saved to {output_file}.csv and {output_file}.xlsx")
+
+# Define the dataset directory and output file
+output_file_name = "extracted_pdf_data"
+
+# Call the function to process all PDFs in the directory and save the data
+process_pdfs("model/data/dataset", output_file_name)
