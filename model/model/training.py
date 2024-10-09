@@ -1,4 +1,5 @@
 import os
+import shutil
 import pdfplumber
 import re
 import pandas as pd
@@ -10,6 +11,7 @@ def extract_pdf_data(pdf_path):
         for page in pdf.pages:
             text += page.extract_text()
 
+    # Define regex patterns and extract information with fallback to 'NA' if not found
     cnr_no = re.search(r'CNR No\.\s*(\S+)', text)
     cnr_no = cnr_no.group(1) if cnr_no else 'NA'
 
@@ -94,25 +96,37 @@ def extract_pdf_data(pdf_path):
 
     return data
 
-def process_pdfs(directory, output_file):
-    all_data = pd.DataFrame()
+def append_data_to_csv_excel(data, output_file):
+    # Check if the CSV or Excel file exists
+    csv_exists = os.path.isfile(f"{output_file}.csv")
+    excel_exists = os.path.isfile(f"{output_file}.xlsx")
 
+    df = pd.DataFrame([data])
+    df.to_csv(f"{output_file}.csv", mode='a', header=not csv_exists, index=False)
+    with pd.ExcelWriter(f"{output_file}.xlsx", mode='a', if_sheet_exists='overlay', engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, header=not excel_exists)
+
+def move_pdf_to_processed(pdf_path, processed_dir):
+    os.makedirs(processed_dir, exist_ok=True) 
+    shutil.move(pdf_path, os.path.join(processed_dir, os.path.basename(pdf_path)))
+
+def process_pdfs(directory, output_file, processed_dir):
+    # Iterate over all PDF files in the given directory
     for filename in os.listdir(directory):
         if filename.endswith(".pdf"):
             file_path = os.path.join(directory, filename)
-            print(f"Processing {file_path}...")
+            print(f"Processing {file_path}...")            
             pdf_data = extract_pdf_data(file_path)
-            df = pd.DataFrame([pdf_data])            
-            all_data = pd.concat([all_data, df], ignore_index=True)
-
-    # Save the result as CSV or Excel
-    all_data.to_csv(f"{output_file}.csv", index=False)
-    all_data.to_excel(f"{output_file}.xlsx", index=False)
+            append_data_to_csv_excel(pdf_data, output_file)
+            move_pdf_to_processed(file_path, processed_dir)
 
     print(f"All PDFs processed and data saved to {output_file}.csv and {output_file}.xlsx")
 
-# Define the dataset directory and output file
+
+# Define the dataset directory, processed directory, and output file
+dataset_directory = os.path.join("model/data/dataset")
+processed_directory = os.path.join("model/data/dataset", "processed")
 output_file_name = "extracted_pdf_data"
 
-# Call the function to process all PDFs in the directory and save the data
-process_pdfs("model/data/dataset", output_file_name)
+# Call the function to process all PDFs in the directory and move them to 'processed'
+process_pdfs(dataset_directory, output_file_name, processed_directory)
