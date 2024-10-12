@@ -1,5 +1,5 @@
 # Signifyyy-hackrx
-Official Prototype of Team Signifyyy for HackRx 5.0 Hackathon, model is getting ready
+Official Prototype of Team Signifyyy for HackRx 5.0 Hackathon, we are ready!
 
 
 ```
