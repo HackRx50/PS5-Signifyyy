@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
         type: Buffer,
         default: null
     },
-    documents_id6: { type: mongoose.Schema.Types.ObjectId, ref: 'Document' } // Reference to Document collection
+    documents_id6: { type:[string], default: []} // Reference to Document collection
 })
 
 // Document Schema
@@ -24,7 +24,8 @@ const Document = new mongoose.Schema({
     Judgement: { type: [String], default: [] }, 
     claimNumber: { type: String, unique: true },  // Unique Claim Number
     alarmStatus: { type: Boolean, default: false },  
-    notification: { type: String, default: '' }  
+    notification: { type: String, default: '' }, 
+    userSchemaId = { type:[string], default: [] }
 });
 
 //model
