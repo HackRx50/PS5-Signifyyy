@@ -103,8 +103,8 @@ def csv_excel(data, output_file):
 
     df = pd.DataFrame([data])
     df.to_csv(f"{output_file}.csv", mode='a', header=not csv_exists, index=False)
-    with pd.ExcelWriter(f"{output_file}.xlsx", mode='a', if_sheet_exists='overlay', engine='openpyxl') as writer:
-        df.to_excel(writer, index=False, header=not excel_exists)
+    # with pd.ExcelWriter(f"{output_file}.xlsx", mode='a', if_sheet_exists='overlay', engine='openpyxl') as writer:
+    #     df.to_excel(writer, index=False, header=not excel_exists)
 
 def processor(pdf_path, processed_dir):
     os.makedirs(processed_dir, exist_ok=True) 
@@ -126,7 +126,8 @@ def process_pdfs(directory, output_file, processed_dir):
 # Define the dataset directory, processed directory, and output file
 dataset_directory = os.path.join("model/data/dataset")
 processed_directory = os.path.join("model/data/dataset", "processed")
-oname = "D:\\Learn MERN\\HackRx\\model\\model\\data_pdf"
+# oname = "D:\\Learn MERN\\HackRx\\model\\model\\data_pdf"
+oname = "F:\\HackRx5\\PS5-Signifyyy\\model\\model\\data_pdf2"
 
 # Call the function to process all PDFs in the directory and move them to 'processed'
 process_pdfs(dataset_directory, oname, processed_directory)
