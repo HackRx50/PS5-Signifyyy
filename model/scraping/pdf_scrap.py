@@ -6,6 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.ui import Select
+import requests
+import os
 import time
 import pickle
 
@@ -67,13 +69,32 @@ f4 = 0
 loaded_list = [0, 0, 0, 0]
 ilist = [0, 0, 0, 0]
 
-# with open('saved_list.pkl', 'wb') as f:
+# with open('pdf_ind.pkl', 'wb') as f:
 #     pickle.dump(loaded_list, f)
 
-with open('saved_list.pkl', 'rb') as f:
+with open('pdf_ind.pkl', 'rb') as f:
     loaded_list = pickle.load(f)
 
 print("loaded_list", loaded_list)
+
+
+def download_file(url, filename=None, chunk_size=1024):
+
+    response = requests.get(url, stream=True)
+
+    if not filename:
+        filename = url.split('/')[-1]
+
+    with open(filename, 'wb') as f:
+        for chunk in response.iter_content(chunk_size):
+            f.write(chunk)
+
+    return filename
+
+# # Example usage:
+# url = "https://example.com/file.zip"
+# filename = download_file(url)
+# print("File downloaded:", filename)
 
 
 def fn1():
@@ -100,9 +121,37 @@ def fn1():
 
             time.sleep(0.5)
 
-            with open("data/st3.html", "a", encoding="utf-8") as f:
-                f.write(d)
-            time.sleep(0.5)
+            # with open("data/st3.html", "a", encoding="utf-8") as f:
+            #     f.write(d)
+            
+            time.sleep(2)
+
+            link = driver.find_element(By.XPATH, ".//tr[2]/td[3]//a")
+            print(link.get_attribute("outerHTML"))
+
+            driver.execute_script("arguments[0].scrollIntoView(true);", link)
+
+            time.sleep(120)
+            # link.click()
+            
+
+            time.sleep(5)
+            object_element = driver.find_element(By.XPATH, ".//div[@id='modal_order_body']//object")
+            print(object_element.get_attribute('innerHTML'))
+
+
+            time.sleep(5)
+            pdf_url = object_element.get_attribute('data')
+            time.sleep(5)
+            nwurl = "https://services.ecourts.gov.in/ecourtindia_v6/" + pdf_url
+
+
+            # url = "https://example.com/file.zip"
+            # filename = download_file(nwurl)
+            # print("File downloaded:", filename)
+
+            # driver.get(nwurl)
+
 
             element2 = driver.find_element(By.ID, 'main_back_caseType')
             time.sleep(0.5)
@@ -118,8 +167,8 @@ def fn1():
 
     except Exception as e:
         print("printitn ilist", ilist)
-        # loaded_list = ilist
-        with open('saved_list.pkl', 'wb') as f:
+        loaded_list = ilist
+        with open('pdf_ind.pkl', 'wb') as f:
             pickle.dump(ilist, f)
         print("indexes are saved")
         return
@@ -131,6 +180,12 @@ def fn4():
     input_element.clear()
 
     input_element.send_keys("2024")
+
+    time.sleep(0.5)
+
+    radio_button = driver.find_element(By.ID , "radDCT")
+    time.sleep(0.5)
+    radio_button.click()
 
     time.sleep(0.5)
 
@@ -155,8 +210,8 @@ def fn4():
     except Exception as e:
         print("Element not found:", e)
         print("printitn ilist", ilist)
-        # loaded_list = ilist
-        with open('saved_list.pkl', 'wb') as f:
+        loaded_list = ilist
+        with open('pdf_ind.pkl', 'wb') as f:
             pickle.dump(ilist, f)
         print("indexes are saved")
         return
@@ -236,7 +291,7 @@ for i in range(loaded_list[0], f1):
         fn2()
 
 
-with open('saved_list.pkl', 'wb') as f:
+with open('pdf_ind.pkl', 'wb') as f:
     pickle.dump(loaded_list, f)
 
 
