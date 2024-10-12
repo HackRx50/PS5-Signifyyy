@@ -6,6 +6,9 @@ import NFTMarketplace from "views/admin/marketplace";
 import Profile from "views/admin/profile";
 import DataTables from "views/admin/tables";
 import RTLDefault from "views/rtl/default";
+import RTLMain from "views/user-info/default"
+import UserAlarm from "views/user-alarm"
+
 import ClaimDetails from "views/admin/ClaimDetails";
 
 // Auth Imports
@@ -37,6 +40,13 @@ const routes = [
     icon: <MdAccessAlarms className="h-6 w-6" />,
     component: <NFTMarketplace />,
     secondary: true,
+  },
+  {
+    name: "Alarm-user",
+    layout: "/admin",
+    path: "user-alarm",
+    icon: <MdAccessAlarms className="h-6 w-6" />,
+    component: <UserAlarm />,
   },
   {
     name: "Data Tables",
@@ -74,11 +84,20 @@ const routes = [
     component: <RTLDefault />,
   },
   {
+
+    name: "User-info",
+    layout: "/rtl",
+    icon: <MdOutlineShoppingCart className="h-6 w-6" />,
+    path: "info",
+    component: <RTLMain />,
+  },
+  {
     name: "ClaimDetails",
     layout: "/admin",
     path: "ClaimDetails",
     icon: <MdHome className="h-6 w-6" />,
     component: <ClaimDetails />,
+
   },
 ];
 export default routes;
