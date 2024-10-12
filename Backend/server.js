@@ -9,7 +9,7 @@ dotenv.config();
 
 const app = express()
 const port = process.env.PORT||5000;
-const DATABASE_URL = process.env.DATABASE_URL
+const DATABASE_URL = "mongodb://localhost:27017"
 
 //CORS policy
 app.use(cors())
@@ -25,6 +25,9 @@ app.use("/api/user", userRoutes);
 
 app.use("/api/panel", panelRoutes);
 
-app.listen(port, ()=>{
+app.listen(5000, ()=>{
+    console.log(DATABASE_URL
+
+    )
     console.log(`server linstening at http://localhost:${port}`)
 })

@@ -7,4 +7,6 @@ router.post('/register', panelRegistration)
 router.post('/login', panelLogin)
 router.post('/logout', panelLogout)
 
+//Bulk upload system to train the model for panel only accessed via Bajaj Finserv 
+
 export default router

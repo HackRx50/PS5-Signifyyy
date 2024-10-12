@@ -57,8 +57,6 @@ const panelRegistration = async(req, res)=>{
 const panelLogin = async (req, res)=>{
 
     try {
-        
-
         const {employeeId, password} = req.body;
 
         const panel = await Panel.findOne({employeeId});
@@ -80,8 +78,6 @@ const panelLogin = async (req, res)=>{
             email: panel.email,
             password: panel.password
         });
-
-
         
     } catch (error) {
         console.log("Error in Login controller", error);
