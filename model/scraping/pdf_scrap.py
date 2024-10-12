@@ -14,7 +14,7 @@ import pickle
 from webdriver_manager.chrome import ChromeDriverManager
 
 service = Service(
-    executable_path='F:\\HackRx5\\scraped\\chromedriver-win64\\chromedriver.exe')
+    executable_path='D:\\Learn MERN\\chromedriver-win64\\chromedriver.exe')
 driver = webdriver.Chrome(service=service)
 driver.get("https://services.ecourts.gov.in/ecourtindia_v6/")
 

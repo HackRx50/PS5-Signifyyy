@@ -14,9 +14,22 @@ const userSchema = new mongoose.Schema({
         type: Buffer,
         default: null
     },
+    documents_id6: { type:[string], default: []} // Reference to Document collection
 })
+
+// Document Schema
+const Document = new mongoose.Schema({
+    FIR: { type: [String], default: [] },  
+    Claim: { type: [String], default: [] }, 
+    Judgement: { type: [String], default: [] }, 
+    claimNumber: { type: String, unique: true },  // Unique Claim Number
+    alarmStatus: { type: Boolean, default: false },  
+    notification: { type: String, default: '' }, 
+    userSchemaId = { type:[string], default: [] }
+});
 
 //model
 const UserModel = mongoose.model("user", userSchema)
+const DocDocument = mongoose.model("DocDocument", Document)
 
-export default UserModel
+export {DocDocument, UserModel};
