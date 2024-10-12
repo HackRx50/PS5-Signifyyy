@@ -16,4 +16,6 @@ model/ML_API/app/myenv
 model/scraping/myenv
 model/scraping/.venv
 
+model/model/.venv
+
 model/scraping/__pycache__
