@@ -96,7 +96,7 @@ def extract_pdf_data(pdf_path):
 
     return data
 
-def append_data_to_csv_excel(data, output_file):
+def csv_excel(data, output_file):
     # Check if the CSV or Excel file exists
     csv_exists = os.path.isfile(f"{output_file}.csv")
     excel_exists = os.path.isfile(f"{output_file}.xlsx")
@@ -106,7 +106,7 @@ def append_data_to_csv_excel(data, output_file):
     with pd.ExcelWriter(f"{output_file}.xlsx", mode='a', if_sheet_exists='overlay', engine='openpyxl') as writer:
         df.to_excel(writer, index=False, header=not excel_exists)
 
-def move_pdf_to_processed(pdf_path, processed_dir):
+def processor(pdf_path, processed_dir):
     os.makedirs(processed_dir, exist_ok=True) 
     shutil.move(pdf_path, os.path.join(processed_dir, os.path.basename(pdf_path)))
 
@@ -117,8 +117,8 @@ def process_pdfs(directory, output_file, processed_dir):
             file_path = os.path.join(directory, filename)
             print(f"Processing {file_path}...")            
             pdf_data = extract_pdf_data(file_path)
-            append_data_to_csv_excel(pdf_data, output_file)
-            move_pdf_to_processed(file_path, processed_dir)
+            csv_excel(pdf_data, output_file)
+            processor(file_path, processed_dir)
 
     print(f"All PDFs processed and data saved to {output_file}.csv and {output_file}.xlsx")
 
@@ -126,7 +126,7 @@ def process_pdfs(directory, output_file, processed_dir):
 # Define the dataset directory, processed directory, and output file
 dataset_directory = os.path.join("model/data/dataset")
 processed_directory = os.path.join("model/data/dataset", "processed")
-output_file_name = "extracted_pdf_data"
+oname = "D:\\Learn MERN\\HackRx\\model\\model\\data_pdf"
 
 # Call the function to process all PDFs in the directory and move them to 'processed'
-process_pdfs(dataset_directory, output_file_name, processed_directory)
+process_pdfs(dataset_directory, oname, processed_directory)
