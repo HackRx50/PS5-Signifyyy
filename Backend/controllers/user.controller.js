@@ -1,8 +1,11 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import multer from "multer";
+import fs from 'fs'
+import path from 'path'
 import {DocDocument} from '../models/user.js';  // Assuming Document schema is in models/Document.js
 import {UserModel } from '../models/user.js';  // Assuming UserInfo schema is in models/UserInfo.js
+import {spawn} from 'child_process'
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -168,6 +171,27 @@ const changeUserPassword = async (req, res) => {
   }
 };
 
+
+
+
+
+const runPy = () => {
+  const pythonProcess = spawn('python', ['D:/Learn MERN/HackRx/model/model/feature.py']); // Replace with your script's path
+
+    pythonProcess.stdout.on('data', (data) => {
+        console.log(`Python Output: ${data.toString()}`);
+    });
+
+    pythonProcess.stderr.on('data', (data) => {
+        console.error(`Python Error: ${data.toString()}`);
+    });
+
+    pythonProcess.on('close', (code) => {
+        console.log(`Python script finished with code ${code}`);
+    });
+}
+
+
 const saveDocument = async (req, res) => {
   try {
     const { file } = req;
@@ -175,7 +199,32 @@ const saveDocument = async (req, res) => {
     console.log(req.body.email, req.file)
     if (!file) {
       return res.status(400).send({ message: "Please upload a document" });
+
     }
+
+
+    const saveFolder = 'D:/Learn MERN/HackRx/model/data/data';
+  
+      // Ensure the folder exists
+      if (!fs.existsSync(saveFolder)) {
+        fs.mkdirSync(saveFolder, { recursive: true });
+      }
+  
+  
+      // Decode the base64 string
+      const base64Data = req.file.buffer; // Remove any header if present
+  
+      // Define the file path where the PDF will be saved
+      const filePath = path.join(saveFolder, email + ".pdf");
+  
+      // Write the decoded file to the desired location
+      fs.writeFile(filePath, base64Data, 'base64', (err) => {
+        if (err) {
+          return res.status(500).send('Error writing file.');
+        }
+
+        runPy()
+      })
 
     // Create a new document record with binary data
       const updateUser = await UserModel.findOneAndUpdate(
@@ -187,12 +236,13 @@ const saveDocument = async (req, res) => {
         },
         { new: true }
       );
+    
+      //writing file
 
     res
       .status(201)
       .send({
-        message: "Document uploaded successfully",
-        document: updateUser,
+        message: "Document uploaded successfully"      
       });
   } catch (error) {
     console.log(error);
