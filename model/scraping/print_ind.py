@@ -3,7 +3,7 @@ import pickle
 
 loaded_list = []
 
-with open('saved_list.pkl', 'rb') as f:
+with open('pdf_ind.pkl', 'rb') as f:
     loaded_list = pickle.load(f)
 
 
