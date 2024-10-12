@@ -199,6 +199,7 @@ const saveDocument = async (req, res) => {
     console.log(req.body.email, req.file)
     if (!file) {
       return res.status(400).send({ message: "Please upload a document" });
+
     }
 
 
@@ -235,12 +236,13 @@ const saveDocument = async (req, res) => {
         },
         { new: true }
       );
+    
+      //writing file
 
     res
       .status(201)
       .send({
-        message: "Document uploaded successfully",
-        document: updateUser,
+        message: "Document uploaded successfully"      
       });
   } catch (error) {
     console.log(error);
