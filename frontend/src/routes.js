@@ -9,6 +9,7 @@ import RTLDefault from "views/rtl/default";
 import RTLMain from "views/user-info/default"
 import UserAlarm from "views/user-alarm"
 
+import ClaimDetails from "views/admin/ClaimDetails";
 
 // Auth Imports
 import SignIn from "views/auth/SignIn";
@@ -83,11 +84,20 @@ const routes = [
     component: <RTLDefault />,
   },
   {
+
     name: "User-info",
     layout: "/rtl",
     icon: <MdOutlineShoppingCart className="h-6 w-6" />,
     path: "info",
     component: <RTLMain />,
+  },
+  {
+    name: "ClaimDetails",
+    layout: "/admin",
+    path: "ClaimDetails",
+    icon: <MdHome className="h-6 w-6" />,
+    component: <ClaimDetails />,
+
   },
 ];
 export default routes;
