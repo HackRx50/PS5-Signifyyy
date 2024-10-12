@@ -17,3 +17,5 @@ model/scraping/myenv
 model/scraping/.venv
 
 model/scraping/__pycache__
+
+model/model/.venv
