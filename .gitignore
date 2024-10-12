@@ -14,6 +14,6 @@ model/training_model/myenv
 model/ML_API/app/myenv
 
 model/scraping/myenv
-
 model/scraping/.venv
+
 model/scraping/__pycache__

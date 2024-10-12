@@ -51,12 +51,12 @@ time.sleep(0.5)
 # Here till
 
 abbreviations = [
-    "M.A.C.P. - Motor Accident Claim Petition",
-    # "MACP C Appln. - Civil Application in Motor Accident Claim",
-    # "MACP. Dkst. - Execution of Award in Motor Accident Claims",
-    # "MACP. M.A. - Misc. Application in Motor Accident Claims",
-    # "MACP Spl. - Motor Accident Claim Petition (Special)",
-    # "MACP M.A.N.R.J.I. - Misc. Appln. not requiring Judicial Inquiry in Motor Accident Claim Petition"
+    # "M.A.C.P. - Motor Accident Claim Petition",
+    "MACP C Appln. - Civil Application in Motor Accident Claim",
+    "MACP. Dkst. - Execution of Award in Motor Accident Claims",
+    "MACP. M.A. - Misc. Application in Motor Accident Claims",
+    "MACP Spl. - Motor Accident Claim Petition (Special)",
+    "MACP M.A.N.R.J.I. - Misc. Appln. not requiring Judicial Inquiry in Motor Accident Claim Petition"
 ]
 
 f1 = 0
@@ -184,6 +184,7 @@ def fn3():
         if (all_options[i].get_attribute("value") != ""):
             if (is_abbreviation_present(all_options[i].text)):
                 # print(all_options[i].get_attribute("value"))
+                time.sleep(2)
                 all_options[i].click()
                 time.sleep(0.5)
                 ilist[2] = i
