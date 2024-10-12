@@ -24,33 +24,33 @@ const Dashboard = () => {
       <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
         <Widget
           icon={<MdBarChart className="h-7 w-7" />}
-          title={"Earnings"}
-          subtitle={"$340.5"}
+          title={"Pending Cases Across India(motor accident)"}
+          subtitle={"1.046 million"}
         />
         <Widget
           icon={<IoDocuments className="h-6 w-6" />}
-          title={"Spend this month"}
-          subtitle={"$642.39"}
+          title={"Cases Disposed"}
+          subtitle={"29%"}
         />
         <Widget
           icon={<MdBarChart className="h-7 w-7" />}
-          title={"Sales"}
-          subtitle={"$574.34"}
+          title={"New claims"}
+          subtitle={"4,54,944"}
         />
         <Widget
           icon={<MdDashboard className="h-6 w-6" />}
-          title={"Your Balance"}
-          subtitle={"$1,000"}
+          title={"percent of companies facing fraud claims"}
+          subtitle={"60%"}
         />
         <Widget
           icon={<MdBarChart className="h-7 w-7" />}
-          title={"New Tasks"}
-          subtitle={"145"}
+          title={"Monetary Impact"}
+          subtitle={"₹80,455 crore​"}
         />
         <Widget
           icon={<IoMdHome className="h-6 w-6" />}
-          title={"Total Projects"}
-          subtitle={"$2433"}
+          title={"Bajaj Allianz's CSR"}
+          subtitle={"85%"}
         />
       </div>
 
@@ -58,42 +58,52 @@ const Dashboard = () => {
 
       <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
         <TotalSpent />
-        <WeeklyRevenue />
+        <PieChartCard />
+        
       </div>
+
+      <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
+        <WeeklyRevenue />
+        <div className="grid grid-cols-1 rounded-[20px]">
+            <MiniCalendar />
+          </div>
+        
+      </div>
+
+      
 
       {/* Tables & Charts */}
 
       <div className="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-2">
         {/* Check Table */}
         <div>
-          <CheckTable
+          {/* <CheckTable
             columnsData={columnsDataCheck}
             tableData={tableDataCheck}
-          />
+          /> */}
         </div>
 
         {/* Traffic chart & Pie Chart */}
 
         <div className="grid grid-cols-1 gap-5 rounded-[20px] md:grid-cols-2">
-          <DailyTraffic />
-          <PieChartCard />
+          {/* <DailyTraffic />
+          <ComplexTable
+            columnsData={columnsDataComplex}
+            tableData={tableDataComplex}
+          /> */}
+
+          
         </div>
 
         {/* Complex Table , Task & Calendar */}
 
-        <ComplexTable
-          columnsData={columnsDataComplex}
-          tableData={tableDataComplex}
-        />
-
-        {/* Task chart & Calendar */}
+        
+        {/* Task chart & Calendar
 
         <div className="grid grid-cols-1 gap-5 rounded-[20px] md:grid-cols-2">
           <TaskCard />
-          <div className="grid grid-cols-1 rounded-[20px]">
-            <MiniCalendar />
-          </div>
-        </div>
+          
+        </div> */}
       </div>
     </div>
   );

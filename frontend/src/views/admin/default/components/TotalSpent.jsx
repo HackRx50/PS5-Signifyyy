@@ -1,48 +1,88 @@
 import React from "react";
+import { Line } from "react-chartjs-2";
 import {
-  MdArrowDropUp,
-  MdOutlineCalendarToday,
-  MdBarChart,
-} from "react-icons/md";
-import Card from "components/card";
-import {
-  lineChartDataTotalSpent,
-  lineChartOptionsTotalSpent,
-} from "variables/charts";
-import LineChart from "components/charts/LineChart";
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import Card from "components/card"; // Assuming you have a Card component
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const TotalSpent = () => {
+  // Data for the chart
+  const years = [2018, 2019, 2020, 2021, 2022, 2023];
+  const fraudCasesPercentage = [45, 50, 55, 58, 60, 60]; // Percentage of insurers reporting fraud
+  const fraudRiseCases = [20, 30, 35, 40, 55, 60];       // Number of fraud cases in thousands
+
+  // Chart data for "Percentage of Insurers Reporting Fraud"
+  const dataPercentage = {
+    labels: years,
+    datasets: [
+      {
+        label: 'Percentage of Insurers Reporting Fraud Rise',
+        data: fraudCasesPercentage,
+        borderColor: 'rgba(59, 130, 246, 1)', // Tailwind blue-500
+        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+        pointBackgroundColor: 'rgba(59, 130, 246, 1)',
+        pointBorderColor: 'rgba(59, 130, 246, 1)',
+        fill: true,
+      },
+    ],
+  };
+
+  // Chart data for "Estimated Fraud Cases"
+  const dataCases = {
+    labels: years,
+    datasets: [
+      {
+        label: 'Estimated Fraud Cases (in thousands)',
+        data: fraudRiseCases,
+        borderColor: 'rgba(239, 68, 68, 1)', // Tailwind red-500
+        backgroundColor: 'rgba(239, 68, 68, 0.2)',
+        pointBackgroundColor: 'rgba(239, 68, 68, 1)',
+        pointBorderColor: 'rgba(239, 68, 68, 1)',
+        fill: true,
+      },
+    ],
+  };
+
+  // Chart options
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Trends in Motor Vehicle Insurance Fraud in India (2018-2023)',
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+
   return (
-    <Card extra="!p-[20px] text-center">
-      <div className="flex justify-between">
-        <button className="linear mt-1 flex items-center justify-center gap-2 rounded-lg bg-lightPrimary p-2 text-gray-600 transition duration-200 hover:cursor-pointer hover:bg-gray-100 active:bg-gray-200 dark:bg-navy-700 dark:hover:opacity-90 dark:active:opacity-80">
-          <MdOutlineCalendarToday />
-          <span className="text-sm font-medium text-gray-600">This month</span>
-        </button>
-        <button className="!linear z-[1] flex items-center justify-center rounded-lg bg-lightPrimary p-2 text-brand-500 !transition !duration-200 hover:bg-gray-100 active:bg-gray-200 dark:bg-navy-700 dark:text-white dark:hover:bg-white/20 dark:active:bg-white/10">
-          <MdBarChart className="h-6 w-6" />
-        </button>
+    <Card extra="!p-4 text-center">
+      <h2 className="text-xl font-bold mb-4">Motor Vehicle Insurance Fraud Trends</h2>
+      
+      {/* Chart for Percentage of Insurers Reporting Fraud */}
+      <div className="mb-8">
+        <Line data={dataPercentage} options={options} />
       </div>
 
-      <div className="flex h-full w-full flex-row justify-between sm:flex-wrap lg:flex-nowrap 2xl:overflow-hidden">
-        <div className="flex flex-col">
-          <p className="mt-[20px] text-3xl font-bold text-navy-700 dark:text-white">
-            $37.5K
-          </p>
-          <div className="flex flex-col items-start">
-            <p className="mt-2 text-sm text-gray-600">Total Spent</p>
-            <div className="flex flex-row items-center justify-center">
-              <MdArrowDropUp className="font-medium text-green-500" />
-              <p className="text-sm font-bold text-green-500"> +2.45% </p>
-            </div>
-          </div>
-        </div>
-        <div className="h-full w-full">
-          <LineChart
-            options={lineChartOptionsTotalSpent}
-            series={lineChartDataTotalSpent}
-          />
-        </div>
+      {/* Chart for Estimated Fraud Cases */}
+      <div>
+        <Line data={dataCases} options={options} />
       </div>
     </Card>
   );
