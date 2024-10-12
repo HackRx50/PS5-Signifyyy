@@ -340,6 +340,18 @@ const Dashboard = () => {
       temp11
     );
 
+    if (
+      vehicleNo === "" ||
+      applicantAdvocate === "" ||
+      petition === "" ||
+      opponent1 === "" ||
+      opponent2 === "" ||
+      policeCaseNo === "" ||
+      hospitalName === ""
+    ) {
+      alert("Please fill all the details");
+    }
+
     // console.log("1", temp1);
     // console.log("2", temp2);
     // console.log("3", temp3);
@@ -359,10 +371,10 @@ const Dashboard = () => {
     try {
       let flag = true;
 
-      if (dateDiff(accidentDate, registeredOn) > 30) {
+      if (dateDiff(accidentDate, registeredOn) > 30 || Nvin == 0) {
         setPred("High chances of Fraud");
         setColor(0);
-        flag = false;
+        flag = false; 
       }
       if (result.length !== 53) {
         throw new Error("Please Fill all the sections");
