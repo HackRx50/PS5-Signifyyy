@@ -115,6 +115,7 @@ const docUpload = async(req, res) => {
     }
 
     // Create a new document with the provided data
+    //new document saved in database
     const newDocument = new DocDocument({
         FIR: FIR || [],            // Default to an empty array if FIR is not provided
         Claim: Claim || [],        // Default to an empty array if Claim is not provided
