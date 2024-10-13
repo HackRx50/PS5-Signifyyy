@@ -309,8 +309,12 @@ const Dashboard = () => {
   const [opponent2, setOpponent2] = useState("");
   const [policeCaseNo, setPoliceCaseNo] = useState("");
   const [hospitalName, setHospitalName] = useState("");
-  const [totalClaim,setTotalClaim] = useState("");
-  const [resultField,setResultField] = useState("");
+  const [totalClaim, setTotalClaim] = useState("");
+  const [resultField, setResultField] = useState("");
+  const [monthlyIncome, setMonthlyIncome] = useState(0);
+  const [isDead, setIsDead] = useState(false);
+  const [injuryRecoveryYears, setInjuryRecoveryYears] = useState(0);
+  const [settleAmount, setSettleAmount] = useState("");
 
   const Submitfn = () => {
     ans = [
@@ -373,40 +377,52 @@ const Dashboard = () => {
     try {
       let flag = true;
       let helper = [];
-
+      if (applicantAdvocate == "bhupendra gehlot") {
+        setPred("High chances of Fraud");
+        setColor(0);
+        helper.push("This advocate is comman in various fraud cases");
+        flag = false;
+      }
       if (dateDiff(accidentDate, registeredOn) > 30) {
         setPred("High chances of Fraud");
         setColor(0);
-        helper.push("Case is filled after 30 days of accident");        
-        flag = false; 
-      }
-      if(Nvin==0){
-        setPred("High chances of Fraud");
-        setColor(0);
-        helper.push("Vehicle Involved are 0, so this case might not belongs to M.A.C.P");        
-        flag = false; 
-      }
-      // console.log(Inj+ProC+VehC,selSevtype)
-      if(Inj + ProC + VehC > 300000 && selSevtype==="Minor Damage"){
-        setPred("High chances of Fraud");
-        setColor(0);
-        helper.push("Vehicle incurred Minor Damage, but still claiming high amount");        
+        helper.push("Case is filled after 30 days of accident");
         flag = false;
       }
-      if(ProC==0 && selProdam==="YES"){
+      if (Nvin == 0) {
         setPred("High chances of Fraud");
         setColor(0);
-        helper.push("Property Claimed filled without property damage");        
+        helper.push(
+          "Vehicle Involved are 0, so this case might not belongs to M.A.C.P"
+        );
+        flag = false;
+      }
+      // console.log(Inj+ProC+VehC,selSevtype)
+      if (Inj + ProC + VehC > 300000 && selSevtype === "Minor Damage") {
+        setPred("High chances of Fraud");
+        setColor(0);
+        helper.push(
+          "Vehicle incurred Minor Damage, but still claiming high amount"
+        );
+        flag = false;
+      }
+      if (ProC == 0 && selProdam === "YES") {
+        setPred("High chances of Fraud");
+        setColor(0);
+        helper.push("Property Claimed filled without property damage");
         flag = false;
       }
       // console.log(helper)
-      const finalVal = helper.join(' && ');
+      const finalVal = helper.join(" && ");
       setResultField(finalVal);
 
       if (result.length !== 53) {
         throw new Error("Please Fill all the sections");
       }
-      if (flag) {
+      if (!flag) {
+        setSettleAmount("");
+        flag = false;
+      } else {
         axios
           .post("http://127.0.0.1:8000/predict", { features: result })
           .then((res) => {
@@ -418,6 +434,19 @@ const Dashboard = () => {
               setColor(1);
               setPred("Seems to be suspicious");
             }
+            if (color == 2 || color == 1) {
+              const compensation = calculateCompensation(
+                monthlyIncome,
+                age,
+                isDead,
+                injuryRecoveryYears
+              );
+              setSettleAmount(
+                `Total compensation: Rs. ${compensation.toLocaleString(
+                  "en-IN"
+                )}`
+              );
+            }
           })
           .catch((err) => {
             console.log(err);
@@ -428,6 +457,81 @@ const Dashboard = () => {
       setPred(error.message);
     }
   };
+
+  function calculateCompensation(
+    monthlyIncome = 5000,
+    age,
+    isDeath = true,
+    injuryRecoveryYears = 0
+  ) {
+    const annualIncome = monthlyIncome * 12;
+    let futureProspectPercentage, personalExpenseDeduction, multiplier;
+
+    // Determine future prospect percentage and personal expense deduction based on income
+    if (annualIncome <= 50000) {
+      futureProspectPercentage = 40;
+      personalExpenseDeduction = 1 / 2;
+    } else if (annualIncome <= 100000) {
+      futureProspectPercentage = 25;
+      personalExpenseDeduction = 1 / 3;
+    } else {
+      futureProspectPercentage = 10;
+      personalExpenseDeduction = 1 / 5;
+    }
+
+    // Determine multiplier based on age
+    if (age <= 20) multiplier = 18;
+    else if (age <= 25) multiplier = 18;
+    else if (age <= 30) multiplier = 17;
+    else if (age <= 35) multiplier = 16;
+    else if (age <= 40) multiplier = 15;
+    else if (age <= 45) multiplier = 14;
+    else if (age <= 50) multiplier = 13;
+    else if (age <= 55) multiplier = 11;
+    else if (age <= 60) multiplier = 9;
+    else if (age <= 65) multiplier = 7;
+    else multiplier = 5;
+
+    // Calculate future prospects
+    const futureProspects = annualIncome * (futureProspectPercentage / 100);
+
+    // Calculate total income with future prospects
+    const totalIncomeWithProspects = annualIncome + futureProspects;
+
+    // Calculate income after personal expense deduction
+    const incomeAfterDeduction =
+      totalIncomeWithProspects * (1 - personalExpenseDeduction);
+
+    // Calculate loss of future income
+    const lossOfFutureIncome = incomeAfterDeduction * multiplier;
+
+    let compensation = lossOfFutureIncome;
+
+    if (isDeath) {
+      // Add components for death cases
+      const funeralExpenses = 15000;
+      const lossOfEstate = 15000;
+      const lossOfConsortium = 40000;
+      const lossOfParentalConsortium = 80000; // Assuming both parents are alive
+
+      compensation +=
+        funeralExpenses +
+        lossOfEstate +
+        lossOfConsortium +
+        lossOfParentalConsortium;
+    } else {
+      // Add components for injury cases
+      const painAndSuffering = 50000 * injuryRecoveryYears;
+      const medicalExpenses = 100000 * injuryRecoveryYears; // Assumption, should be replaced with actual expenses
+      const lossOfIncomeDuringRecovery =
+        monthlyIncome * 12 * injuryRecoveryYears;
+
+      compensation +=
+        painAndSuffering + medicalExpenses + lossOfIncomeDuringRecovery;
+    }
+
+    return Math.round(compensation);
+  }
 
   const handleFileUpload = async (file) => {
     console.log("this is clicked ");
@@ -479,294 +583,336 @@ const Dashboard = () => {
       {/* Card widget */}
       <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
         <div style={{ display: "none" }}>
-          <labe class="mb-2 block text-base">Months as Customer</labe>
+          <labe className="mb-2 block text-base">Months as Customer</labe>
           <input
             type="number"
             placeholder="Months as Customer"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={Months}
             onChange={(e) => setMonths(e.target.value)}
           />
         </div>
         <div style={{ display: "none" }}>
-          <labe class="mb-2 block text-base">Policy Deductable</labe>
+          <labe className="mb-2 block text-base">Policy Deductable</labe>
           <input
             type="number"
             placeholder="Policy Deductable"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={PolDed}
             onChange={(e) => setPolDed(e.target.value)}
           />
         </div>
         <div style={{ display: "none" }}>
-          <labe class="mb-2 block text-base">Umbrella Limit</labe>
+          <labe className="mb-2 block text-base">Umbrella Limit</labe>
           <input
             type="number"
             placeholder="Umbrella Limit"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={Umbli}
             onChange={(e) => setUmbli(e.target.value)}
           />
         </div>
         <div style={{ display: "none" }}>
-          <labe class="mb-2 block text-base">Capital Gains</labe>
+          <labe className="mb-2 block text-base">Capital Gains</labe>
           <input
             type="number"
             placeholder="Capital Gains"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={Capga}
             onChange={(e) => setCapga(e.target.value)}
           />
         </div>
         {/*  */}
         <div style={{ display: "none" }}>
-          <labe class="mb-2 block text-base">Capital Loss</labe>
+          <labe className="mb-2 block text-base">Capital Loss</labe>
           <input
             type="number"
             placeholder="Capital Loss"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={Caplo}
             onChange={(e) => setCaplo(e.target.value)}
           />
         </div>
         <div style={{ display: "none" }}>
-          <labe class="mb-2 block text-base">Incident Hour of The Day</labe>
+          <labe className="mb-2 block text-base">Incident Hour of The Day</labe>
           <input
             type="number"
             placeholder="Incident Hour of The Day"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={Inhr}
             onChange={(e) => setInhr(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">Applicant Name</label>
+          <label className="mb-2 block text-base">Applicant Name</label>
           <input
             type="text"
             placeholder="Eg: bhupendra"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">CNR No.</label>
+          <label className="mb-2 block text-base">CNR No.</label>
           <input
             type="text"
             placeholder="Eg: 1234"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={cnrNo}
             onChange={(e) => setCnrNo(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">M.A.C.P No.</label>
+          <label className="mb-2 block text-base">M.A.C.P No.</label>
           <input
             type="text"
             placeholder="Eg: 1234"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={macpNo}
             onChange={(e) => setMacpNo(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">Received On</label>
+          <label className="mb-2 block text-base">Received On</label>
           <input
             type="text"
             placeholder="Eg: 01/12/2022"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={receivedOn}
             onChange={(e) => setReceivedOn(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">Registered On</label>
+          <label className="mb-2 block text-base">Registered On</label>
           <input
             type="text"
             placeholder="Eg: 01/12/2022"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={registeredOn}
             onChange={(e) => setRegisteredOn(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">court Info</label>
+          <label className="mb-2 block text-base">court Info</label>
           <input
             type="text"
             placeholder="Eg: Pune High court"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={courtInfo}
             onChange={(e) => setCourtInfo(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">Accident Date</label>
+          <label className="mb-2 block text-base">Accident Date</label>
           <input
             type="text"
             placeholder="Eg: 01/12/2022"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={accidentDate}
             onChange={(e) => setAccidentDate(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">Address</label>
+          <label className="mb-2 block text-base">Address</label>
           <input
             type="text"
             placeholder="Eg: Pune"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">Vehicle No.</label>
+          <label className="mb-2 block text-base">Vehicle No.</label>
           <input
             type="text"
             placeholder="Eg: RJ22GA9123"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={vehicleNo}
             onChange={(e) => setVehicleNo(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">Applicant Advocate</label>
+          <label className="mb-2 block text-base">Applicant Advocate</label>
           <input
             type="text"
             placeholder="Eg: Harsh"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={applicantAdvocate}
             onChange={(e) => setApplicantAdvocate(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">Petition Info</label>
+          <label className="mb-2 block text-base">Petition Info</label>
           <input
             type="text"
             placeholder="Eg: value"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={petition}
             onChange={(e) => setPetiton(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">Opponent 1</label>
+          <label className="mb-2 block text-base">Opponent 1</label>
           <input
             type="text"
             placeholder="Eg: harsh"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={opponent1}
             onChange={(e) => setOpponent1(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">Opponent 2</label>
+          <label className="mb-2 block text-base">Opponent 2</label>
           <input
             type="text"
             placeholder="Eg: bhupendra"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={opponent2}
             onChange={(e) => setOpponent2(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">Police Case No.</label>
+          <label className="mb-2 block text-base">Police Case No.</label>
           <input
             type="text"
             placeholder="Eg: 1234"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={policeCaseNo}
             onChange={(e) => setPoliceCaseNo(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">Hospital Name</label>
+          <label className="mb-2 block text-base">Hospital Name</label>
           <input
             type="text"
             placeholder="Eg: goverment hospital"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={hospitalName}
             onChange={(e) => setHospitalName(e.target.value)}
           />
         </div>
         <div>
-          <label class="mb-2 block text-base">Vehicles Involved</label>
+          <label className="mb-2 block text-base">Vehicles Involved</label>
           <input
             type="number"
             placeholder="Eg 4"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={Nvin}
             onChange={(e) => setNvin(e.target.value)}
           />
         </div>
         <div style={{ display: "none" }}>
-          <labe class="mb-2 block text-base">Body Injuries</labe>
+          <label className="mb-2 block text-base">Body Injuries</label>
           <input
             type="number"
             placeholder="Eg: 2"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={BodIn}
             onChange={(e) => setBodIn(e.target.value)}
           />
         </div>
         <div>
-          <labe class="mb-2 block text-base">Witnesses</labe>
+          <label className="mb-2 block text-base">Witnesses</label>
           <input
             type="number"
             placeholder="Eg 2"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={Wit}
             onChange={(e) => setWit(e.target.value)}
           />
         </div>
         <div>
-          <labe class="mb-2 block text-base">Injury Claim</labe>
+          <label className="mb-2 block text-base">Injury Claim</label>
           <input
             type="number"
             placeholder="Eg 65100rs"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={Inj}
             onChange={(e) => setInj(e.target.value)}
           />
         </div>
         <div>
-          <labe class="mb-2 block text-base">Property Claim</labe>
+          <label className="mb-2 block text-base">Property Claim</label>
           <input
             type="number"
             placeholder="Eg 130200rs"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={ProC}
             onChange={(e) => setProC(e.target.value)}
           />
         </div>
         <div>
-          <labe class="mb-2 block text-base">Vehicle Claim</labe>
+          <label className="mb-2 block text-base">Vehicle Claim</label>
           <input
             type="number"
             placeholder="Eg 520800rs"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
             value={VehC}
             onChange={(e) => setVehC(e.target.value)}
           />
         </div>
 
+        <div>
+          <label className="mb-2 block text-base">
+            Applicant Monthly Income
+          </label>
+          <input
+            type="number"
+            placeholder="Eg 5000rs"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            value={monthlyIncome}
+            onChange={(e) => setMonthlyIncome(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-4 flex items-center">
+          <input
+            id="default-checkbox"
+            type="checkbox"
+            checked={isDead}
+            onChange={(e) => setIsDead(e.target.checked)}
+            className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-blue-600 focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800 dark:focus:ring-blue-600"
+          />
+          <label
+            htmlFor="default-checkbox"
+            className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+          >
+            Is User Dead
+          </label>
+        </div>
+
+        <div>
+          <label className="mb-2 block text-base">
+            Injury Recovery Years (If Any)
+          </label>
+          <input
+            type="number"
+            placeholder="Eg 2 years"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            value={injuryRecoveryYears}
+            onChange={(e) => setInjuryRecoveryYears(e.target.value)}
+          />
+        </div>
+
         {/* Use Less  */}
         <div>
-          <labe class="mb-2 block text-base">Age</labe>
+          <label className="mb-2 block text-base">Age</label>
           <input
             type="number"
             placeholder="Age"
             value={age}
             onChange={(e) => setAge(e.target.value)}
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
           />
         </div>
         <div style={{ display: "none" }}>
-          <labe class="mb-2 block text-base">Policy Annual Premium</labe>
+          <labe className="mb-2 block text-base">Policy Annual Premium</labe>
           <input
             type="number"
             placeholder="Policy Annual Premium"
-            class="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
+            className="w-full rounded-md border border-gray-400 bg-white px-4 py-2 text-base outline-blue-500"
           />
         </div>
         {/* Useless end */}
@@ -777,7 +923,7 @@ const Dashboard = () => {
           style={{ display: "none" }}
           className="relative mx-auto w-full font-[sans-serif]"
         >
-          {/* <h3 class="mb-2 block text-base">Policy CSL</h3> */}
+          {/* <h3 className="mb-2 block text-base">Policy CSL</h3> */}
           <select
             // style={{ display: "none" }}
             className="w-full rounded border-none bg-blue-600 px-5 py-2.5 text-[16px] font-normal text-white outline-none hover:bg-blue-700 active:bg-blue-600"
@@ -810,7 +956,7 @@ const Dashboard = () => {
         </div>
 
         <div className="relative mx-auto w-full font-[sans-serif]">
-          <h3 class="mb-2 block text-base">Select Sex:</h3>
+          <h3 className="mb-2 block text-base">Select Sex:</h3>
           <select
             className="w-full rounded border-none bg-blue-600 px-5 py-2.5 text-[16px] font-normal text-white outline-none hover:bg-blue-700 active:bg-blue-600"
             onChange={sexhandle}
@@ -844,7 +990,7 @@ const Dashboard = () => {
           style={{ display: "none" }}
           className="relative mx-auto w-full font-[sans-serif]"
         >
-          <h3 class="mb-2 block text-base">Select Education Level:</h3>
+          <h3 className="mb-2 block text-base">Select Education Level:</h3>
           <select
             className="w-full rounded border-none bg-blue-600 px-5 py-2.5 text-[16px] font-normal text-white outline-none hover:bg-blue-700 active:bg-blue-600"
             onChange={eduhandle}
@@ -875,7 +1021,7 @@ const Dashboard = () => {
         </div>
 
         <div className="relative mx-auto w-full font-[sans-serif]">
-          <h3 class="mb-2 block text-base">Insured Occupation:</h3>
+          <h3 className="mb-2 block text-base">Insured Occupation:</h3>
           <select
             className="w-full rounded border-none bg-blue-600 px-5 py-2.5 text-[16px] font-normal text-white outline-none hover:bg-blue-700 active:bg-blue-600"
             onChange={Occuhandle}
@@ -909,7 +1055,7 @@ const Dashboard = () => {
           style={{ display: "none" }}
           className="relative mx-auto w-full font-[sans-serif]"
         >
-          <h3 class="mb-2 block text-base">Insured Relationship:</h3>
+          <h3 className="mb-2 block text-base">Insured Relationship:</h3>
           <select
             className="w-full rounded border-none bg-blue-600 px-5 py-2.5 text-[16px] font-normal text-white outline-none hover:bg-blue-700 active:bg-blue-600"
             onChange={Relahandle}
@@ -940,7 +1086,7 @@ const Dashboard = () => {
         </div>
 
         <div className="relative mx-auto w-full font-[sans-serif]">
-          <h3 class="mb-2 block text-base">Incident Type:</h3>
+          <h3 className="mb-2 block text-base">Incident Type:</h3>
           <select
             className="w-full rounded border-none bg-blue-600 px-5 py-2.5 text-[16px] font-normal text-white outline-none hover:bg-blue-700 active:bg-blue-600"
             onChange={intypehandle}
@@ -974,7 +1120,7 @@ const Dashboard = () => {
           style={{ display: "none" }}
           className="relative mx-auto w-full font-[sans-serif]"
         >
-          <h3 class="mb-2 block text-base">Collision Type:</h3>
+          <h3 className="mb-2 block text-base">Collision Type:</h3>
           <select
             className="w-full rounded border-none bg-blue-600 px-5 py-2.5 text-[16px] font-normal text-white outline-none hover:bg-blue-700 active:bg-blue-600"
             onChange={Coltypehandle}
@@ -1005,7 +1151,7 @@ const Dashboard = () => {
         </div>
 
         <div className="relative mx-auto w-full font-[sans-serif]">
-          <h3 class="mb-2 block text-base">Incident Severity:</h3>
+          <h3 className="mb-2 block text-base">Incident Severity:</h3>
           <select
             className="w-full rounded border-none bg-blue-600 px-5 py-2.5 text-[16px] font-normal text-white outline-none hover:bg-blue-700 active:bg-blue-600"
             onChange={Sevtypehandle}
@@ -1036,7 +1182,7 @@ const Dashboard = () => {
         </div>
 
         <div className="relative mx-auto w-full font-[sans-serif]">
-          <h3 class="mb-2 block text-base">Authorities Contacted:</h3>
+          <h3 className="mb-2 block text-base">Authorities Contacted:</h3>
           <select
             className="w-full rounded border-none bg-blue-600 px-5 py-2.5 text-[16px] font-normal text-white outline-none hover:bg-blue-700 active:bg-blue-600"
             onChange={Authohandle}
@@ -1067,7 +1213,7 @@ const Dashboard = () => {
         </div>
 
         <div className="relative mx-auto w-full font-[sans-serif]">
-          <h3 class="mb-2 block text-base">Property Damage</h3>
+          <h3 className="mb-2 block text-base">Property Damage</h3>
           <select
             className="w-full rounded border-none bg-blue-600 px-5 py-2.5 text-[16px] font-normal text-white outline-none hover:bg-blue-700 active:bg-blue-600"
             onChange={Prodamhandle}
@@ -1098,7 +1244,7 @@ const Dashboard = () => {
         </div>
 
         <div className="relative mx-auto w-full font-[sans-serif]">
-          <h3 class="mb-2 block text-base">FIR Available</h3>
+          <h3 className="mb-2 block text-base">FIR Available</h3>
           <select
             className="w-full rounded border-none bg-blue-600 px-5 py-2.5 text-[16px] font-normal text-white outline-none hover:bg-blue-700 active:bg-blue-600"
             onChange={Polrephandle}
@@ -1136,16 +1282,14 @@ const Dashboard = () => {
         {pred}
       </div>
 
-      <div
-        className="mt-10 flex justify-center m-4 p-4"
-      >
-        {resultField}
-      </div>
+      <div className="m-4 mt-10 flex justify-center p-4">{resultField}</div>
+
+      <div className="m-4 mt-10 flex justify-center p-4">{settleAmount}</div>
 
       <div className="mt-10 flex justify-around ">
         <button
           type="button"
-          class="border-current rounded-lg border bg-blue-700 px-5 py-2.5 text-sm font-medium tracking-wider text-white outline-none hover:bg-blue-800 active:bg-blue-700"
+          className="border-current rounded-lg border bg-blue-700 px-5 py-2.5 text-sm font-medium tracking-wider text-white outline-none hover:bg-blue-800 active:bg-blue-700"
           onClick={Submitfn}
         >
           Submit
