@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import multer from "multer";
 import fs from 'fs'
 import path from 'path'
-import {DocDocument} from '../models/user.js';  // Assuming Document schema is in models/Document.js
 import {UserModel } from '../models/user.js';  // Assuming UserInfo schema is in models/UserInfo.js
 import {spawn} from 'child_process'
 
@@ -107,44 +106,25 @@ const userLogin = async (req, res) => {
 };
 
 
-const docUpload = async(req, res) => {
+const getPara = async(req, res) => {
   try {
-    const { userId, FIR, Claim, Judgement } = req.body; // Destructure request body
-    
-    // Find the user by ID
-    const user = await UserModel.findById(userId);
-    if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-    }
+    // Connect to MongoDB
+    await client.connect();
+    const database = client.db('uploadedPDF'); // Database name
+    const collection = database.collection('Hackrx'); // Collection name
 
-    // Create a new document with the provided data
-    //new document saved in database
-    const newDocument = new DocDocument({
-        FIR: FIR || [],            // Default to an empty array if FIR is not provided
-        Claim: Claim || [],        // Default to an empty array if Claim is not provided
-        Judgement: Judgement || [] // Default to an empty array if Judgement is not provided
-    });
+    // Get all documents from the collection
+    const data = await collection.find({}).toArray();
 
-    // Save the new document to the database
-    
-    const savedDocument = await newDocument.save();
-    // Associate the document with the user and update their record
-    
-    UserModel.findByIdAndUpdate(userId, {
-      $set: { documents: savedDocument._id },
-    })
-
-
-    
-    // Return the claim number and success response
-    return res.status(201).json({
-        message: 'Document submitted successfully',
-        claimNumber: savedDocument.claimNumber
-    });
-} catch (error) {
-    console.error('Error submitting document:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-}
+    // Send the data as JSON response
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to fetch data from MongoDB' });
+  } finally {
+    // Ensure client will close when you finish/error
+    await client.close();
+  }
 }
 
 const changeUserPassword = async (req, res) => {
@@ -255,6 +235,5 @@ export {
   userLogin,
   changeUserPassword,
   uploadDocument,
-  saveDocument,
-  docUpload
+  saveDocument
 };
