@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 import multer from "multer";
 import fs from 'fs'
 import path from 'path'
-import {DocDocument} from '../models/user.js';  // Assuming Document schema is in models/Document.js
 import {UserModel } from '../models/user.js';  // Assuming UserInfo schema is in models/UserInfo.js
 import {spawn} from 'child_process'
 
