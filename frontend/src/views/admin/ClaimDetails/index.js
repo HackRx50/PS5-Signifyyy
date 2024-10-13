@@ -19,16 +19,16 @@ const ClaimStatusPage = () => {
   };
 
   const parameters = [
-    "Parameter 1",
-    "Parameter 2",
-    "Parameter 3",
-    "Parameter 4",
-    "Parameter 5",
-    "Parameter 6",
-    "Parameter 7",
-    "Parameter 8",
-    "Parameter 9",
-    "Parameter 10",
+    "Applicant Name",
+    "Applicant Address",
+    "Vehicle Number",
+    "Hospital Name",
+    "CNR Number",
+    "MACP Number",
+    "Received On",
+    "Registered On",
+    "Decided On",
+    "Duration",
   ];
 
   const verdict = "Based on the analysis, this claim shows patterns consistent with fraud.";
