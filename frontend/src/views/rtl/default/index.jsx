@@ -309,6 +309,8 @@ const Dashboard = () => {
   const [opponent2, setOpponent2] = useState("");
   const [policeCaseNo, setPoliceCaseNo] = useState("");
   const [hospitalName, setHospitalName] = useState("");
+  const [totalClaim,setTotalClaim] = useState("");
+  const [resultField,setResultField] = useState("");
 
   const Submitfn = () => {
     ans = [
@@ -340,17 +342,17 @@ const Dashboard = () => {
       temp11
     );
 
-    if (
-      vehicleNo === "" ||
-      applicantAdvocate === "" ||
-      petition === "" ||
-      opponent1 === "" ||
-      opponent2 === "" ||
-      policeCaseNo === "" ||
-      hospitalName === ""
-    ) {
-      alert("Please fill all the details");
-    }
+    // if (
+    //   vehicleNo === "" ||
+    //   applicantAdvocate === "" ||
+    //   petition === "" ||
+    //   opponent1 === "" ||
+    //   opponent2 === "" ||
+    //   policeCaseNo === "" ||
+    //   hospitalName === ""
+    // ) {
+    //   alert("Please fill all the details");
+    // }
 
     // console.log("1", temp1);
     // console.log("2", temp2);
@@ -370,12 +372,37 @@ const Dashboard = () => {
 
     try {
       let flag = true;
+      let helper = [];
 
-      if (dateDiff(accidentDate, registeredOn) > 30 || Nvin == 0) {
+      if (dateDiff(accidentDate, registeredOn) > 30) {
         setPred("High chances of Fraud");
         setColor(0);
+        helper.push("Case is filled after 30 days of accident");        
         flag = false; 
       }
+      if(Nvin==0){
+        setPred("High chances of Fraud");
+        setColor(0);
+        helper.push("Vehicle Involved are 0, so this case might not belongs to M.A.C.P");        
+        flag = false; 
+      }
+      // console.log(Inj+ProC+VehC,selSevtype)
+      if(Inj + ProC + VehC > 300000 && selSevtype==="Minor Damage"){
+        setPred("High chances of Fraud");
+        setColor(0);
+        helper.push("Vehicle incurred Minor Damage, but still claiming high amount");        
+        flag = false;
+      }
+      if(ProC==0 && selProdam==="YES"){
+        setPred("High chances of Fraud");
+        setColor(0);
+        helper.push("Property Claimed filled without property damage");        
+        flag = false;
+      }
+      // console.log(helper)
+      const finalVal = helper.join(' && ');
+      setResultField(finalVal);
+
       if (result.length !== 53) {
         throw new Error("Please Fill all the sections");
       }
@@ -1107,6 +1134,12 @@ const Dashboard = () => {
         className="mt-10 flex justify-center p-4 text-white"
       >
         {pred}
+      </div>
+
+      <div
+        className="mt-10 flex justify-center m-4 p-4"
+      >
+        {resultField}
       </div>
 
       <div className="mt-10 flex justify-around ">
